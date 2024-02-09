@@ -41,11 +41,12 @@ def sample_function(series, sample):
     for file in files:
         splitfile = file.split('_')
         if splitfile[-1] == 'rotcrop.tif':
-            stages.append(''.join(splitfile[2:-1]))
+            stage = ''.join([i+'_' for i in splitfile[2:-1]])
+            stages.append(stage)
             
     for stage in stages:
         imroot = series+'_'+sample+'_'+stage
-        impath = os.path.join(sample_path, imroot+'_rotcrop.tif')
+        impath = os.path.join(sample_path, imroot+'rotcrop.tif')
         
         im = cathode_CL_extraction(impath)
         
