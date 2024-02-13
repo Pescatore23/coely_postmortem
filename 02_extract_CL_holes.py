@@ -64,7 +64,7 @@ def series_function(series, n_jobs = 8):
     for sample in folders:
         samples.append(sample.split('_')[-1])
     if series == 'C': samples = ['4']
-    if series == 'Z': samples = ['6']
+    if series == 'Z': samples = ['4']
     Parallel(n_jobs = n_jobs, temp_folder=temppath)(delayed(sample_function)(series, sample) for sample in samples)
         
         
