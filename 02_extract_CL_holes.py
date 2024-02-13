@@ -29,7 +29,7 @@ def crop_cathode_CL(im):
 
 def unsharp_mask_as_IJ(im, sigma, weight):
     # https://imagej.net/ij/developer/source/ij/plugin/filter/UnsharpMask.java.html
-    blur = ndimage.filters.gaussian_filter(im, sigma)
+    blur = ndimage.gaussian_filter(im, sigma)
     im = (im - weight*blur)/(1-weight)
     return im
     
