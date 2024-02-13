@@ -21,7 +21,7 @@ def crop_cathode_CL(im):
             crop = area[x,y]
             if np.abs(crop-med)>10:
                 crop = med
-            crop = crop+10
+            # crop = crop+10
             im[x,y,:crop] = 0
 
     return im
@@ -62,11 +62,13 @@ def series_function(series, n_jobs = 8):
     samples = []
     for sample in folders:
         samples.append(sample.split('_')[-1])
-        
+    if series == 'C': samples = ['4']
+    if series == 'Z': samples = ['6']
     Parallel(n_jobs = n_jobs, temp_folder=temppath)(delayed(sample_function)(series, sample) for sample in samples)
         
         
-series = ['A', 'B', 'C', 'Z']
+# series = ['A', 'B', 'C', 'Z']
+series = ['C', 'Z']
 Parallel(n_jobs = 4, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
     
