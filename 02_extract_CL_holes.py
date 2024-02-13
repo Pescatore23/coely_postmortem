@@ -26,9 +26,10 @@ def crop_cathode_CL(im):
 
     return im
 
-def cathode_CL_extraction(impath):
+def cathode_CL_extraction(impath, crop=True):
     im = skimage.io.imread(impath)
-    # im = crop_cathode_CL(im)
+    if crop: im = crop_cathode_CL(im)
+    im = skimage.filters.unsharp_mask(im, amount=15, preserve_range=True)
     im = im.max(axis=2)
     return im
     
@@ -47,9 +48,18 @@ def sample_function(series, sample):
     for stage in stages:
         imroot = series+'_'+sample+'_'+stage
         impath = os.path.join(sample_path, imroot+'rotcrop.tif')
-        impath = os.path.join(sample_path, imroot+'rotcrop_CCL_manually_removed.tif')
+        option = False
         
-        im = cathode_CL_extraction(impath)
+        if series == 'C' and sample == '4':
+            option = True
+        if series == 'Z' and sample == '4':
+            option = True
+        
+        if option:
+            impath = os.path.join(sample_path, imroot+'rotcrop_CCL_manually_removed.tif')
+            im = cathode_CL_extraction(impath, crop=False)
+        else:
+            im = cathode_CL_extraction(impath)
         
         outpath = os.path.join(sample_path, 'CL_extraction')
         if not os.path.exists(outpath):
@@ -63,8 +73,7 @@ def series_function(series, n_jobs = 8):
     samples = []
     for sample in folders:
         samples.append(sample.split('_')[-1])
-    if series == 'C': samples = ['4']
-    if series == 'Z': samples = ['4']
+
     Parallel(n_jobs = n_jobs, temp_folder=temppath)(delayed(sample_function)(series, sample) for sample in samples)
         
         
