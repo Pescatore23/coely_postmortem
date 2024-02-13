@@ -28,7 +28,7 @@ def crop_cathode_CL(im):
 
 def cathode_CL_extraction(impath):
     im = skimage.io.imread(impath)
-    im = crop_cathode_CL(im)
+    # im = crop_cathode_CL(im)
     im = im.max(axis=2)
     return im
     
@@ -47,6 +47,7 @@ def sample_function(series, sample):
     for stage in stages:
         imroot = series+'_'+sample+'_'+stage
         impath = os.path.join(sample_path, imroot+'rotcrop.tif')
+        impath = os.path.join(sample_path, imroot+'rotcrop_CCL_manually_removed.tif')
         
         im = cathode_CL_extraction(impath)
         
