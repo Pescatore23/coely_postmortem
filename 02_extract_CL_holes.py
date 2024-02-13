@@ -9,6 +9,7 @@ import numpy as np
 import os
 import skimage.io
 from joblib import Parallel, delayed
+from scipy import ndimage
 
 toppath = '/mpc/homes/fische_r/nanotom_data/2023_COELY_postmortem'
 temppath = '/mnt/SSD/fische_r/tmp'
@@ -21,15 +22,24 @@ def crop_cathode_CL(im):
             crop = area[x,y]
             if np.abs(crop-med)>10:
                 crop = med
-            # crop = crop+10
+            crop = crop+10
             im[x,y,:crop] = 0
 
     return im
 
+def unsharp_mask_as_IJ(im, sigma, weight):
+    # https://imagej.net/ij/developer/source/ij/plugin/filter/UnsharpMask.java.html
+    blur = ndimage.filters.gaussian_filter(im, sigma)
+    im = (im - weight*blur)/(1-weight)
+    return im
+    
+
+
 def cathode_CL_extraction(impath, crop=True):
     im = skimage.io.imread(impath)
     if crop: im = crop_cathode_CL(im)
-    im = skimage.filters.unsharp_mask(im, amount=15, preserve_range=True)
+    # im = skimage.filters.unsharp_mask(im, amount=15, preserve_range=True)
+    im = unsharp_mask_as_IJ(im, 1, 0.6)
     im = im.max(axis=2)
     return im
     
@@ -77,8 +87,8 @@ def series_function(series, n_jobs = 8):
     Parallel(n_jobs = n_jobs, temp_folder=temppath)(delayed(sample_function)(series, sample) for sample in samples)
         
         
-# series = ['A', 'B', 'C', 'Z']
-series = ['C', 'Z']
+series = ['A', 'B', 'C', 'Z']
+# series = ['C', 'Z']
 Parallel(n_jobs = 4, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
     
