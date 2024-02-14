@@ -37,10 +37,17 @@ def unsharp_mask_as_IJ(im, sigma, weight):
 
 def cathode_CL_extraction(impath, crop=True):
     im = skimage.io.imread(impath)
+    im = im[100:1100,50:550,:] #crop to active area
     if crop: im = crop_cathode_CL(im)
     # im = skimage.filters.unsharp_mask(im, amount=15, preserve_range=True)
     im = unsharp_mask_as_IJ(im, 1, 0.6)
-    im = im.max(axis=2)
+    
+    #normalize image to similar grayvalues for all samples
+    immax = im.max(axis=2)
+    med = np.median(immax)
+    diff = med - 0.8
+    im = im - diff
+    
     return im
     
     
@@ -71,10 +78,12 @@ def sample_function(series, sample):
         else:
             im = cathode_CL_extraction(impath)
         
-        outpath = os.path.join(sample_path, 'CL_extraction')
+        # outpath = os.path.join(sample_path, 'CL_extraction')
+        outpath = os.path.join(toppath, 'normalized')
         if not os.path.exists(outpath):
             os.mkdir(outpath)
-        skimage.io.imsave(os.path.join(outpath, imroot+'_extracted_CL.tif'), im)
+        # skimage.io.imsave(os.path.join(outpath, imroot+'_extracted_CL.tif'), im)
+        skimage.io.imsave(os.path.join(outpath, imroot+'_normalized.tif'), im)
 
 
 def series_function(series, n_jobs = 8):
