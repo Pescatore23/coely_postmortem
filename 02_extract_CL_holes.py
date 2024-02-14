@@ -79,7 +79,7 @@ def sample_function(series, sample):
             im = cathode_CL_extraction(impath)
         
         # outpath = os.path.join(sample_path, 'CL_extraction')
-        outpath = os.path.join(toppath, 'normalized')
+        outpath = os.path.join(temppath, 'normalized')
         if not os.path.exists(outpath):
             os.mkdir(outpath)
         # skimage.io.imsave(os.path.join(outpath, imroot+'_extracted_CL.tif'), im)
