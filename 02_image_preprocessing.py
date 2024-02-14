@@ -32,14 +32,11 @@ def unsharp_mask_as_IJ(im, sigma, weight):
     blur = ndimage.gaussian_filter(im, sigma)
     im = (im - weight*blur)/(1-weight)
     return im
-    
 
-
-def cathode_CL_extraction(impath, crop=True):
+def crop_and_normalize(impath, crop=True):
     im = skimage.io.imread(impath)
     im = im[100:1100,50:550,:] #crop to active area
     if crop: im = crop_cathode_CL(im)
-    # im = skimage.filters.unsharp_mask(im, amount=15, preserve_range=True)
     im = unsharp_mask_as_IJ(im, 1, 0.6)
     
     #normalize image to similar grayvalues for all samples
@@ -74,15 +71,13 @@ def sample_function(series, sample):
         
         if option:
             impath = os.path.join(sample_path, imroot+'rotcrop_CCL_manually_removed.tif')
-            im = cathode_CL_extraction(impath, crop=False)
+            im = crop_and_normalize(impath, crop=False)
         else:
-            im = cathode_CL_extraction(impath)
+            im = crop_and_normalize(impath)
         
-        # outpath = os.path.join(sample_path, 'CL_extraction')
         outpath = os.path.join(temppath, 'normalized')
         if not os.path.exists(outpath):
             os.mkdir(outpath)
-        # skimage.io.imsave(os.path.join(outpath, imroot+'_extracted_CL.tif'), im)
         skimage.io.imsave(os.path.join(outpath, imroot+'_normalized.tif'), im)
 
 
