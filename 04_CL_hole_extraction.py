@@ -84,8 +84,6 @@ def diffusion_3D(mask, free_pos, radius, iterations = 100, gpu_id=0):
 def image_function(file):
     path = os.path.join(segpath, file)
     splitfile = file.split('__')
-    #fileroot = ''.join([i+'_' for i in splitfile[:-1]])
-#    fileroot = fileroot[:-1]
     fileroot = splitfile[0]
     
     im = skimage.io.imread(path)
@@ -98,15 +96,22 @@ def image_function(file):
     # CLhole_area = holes1*1+holes2*2
     CLholes = holes1.sum()/2+holes2.sum()/2
     
-    outfile = os.path.join(outpath, fileroot+'__ACL_holes.tif')
-    skimage.io.imsave(outfile, diff_mean)
-    return CLholes
+    # outfile = os.path.join(outpath, fileroot+'__ACL_holes.tif')
+    # skimage.io.imsave(outfile, diff_mean)
+    return fileroot, CLholes
 
 
 files = os.listdir(segpath)
 
-Clholes = image_function(files[0])
-print(Clholes)
+datalines = []
+for file in files:
+    fileroot, Clholes = image_function(files[0])
+    datalines.append(fileroot + ' , ', str(Clholes)+'\n')
+    
+outfile = os.path.join(outpath, 'CL_hole_area.csv')
+
+with open(outfile) as f:
+    f.writelines(datalines)
     
     
     
