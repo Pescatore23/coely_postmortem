@@ -56,6 +56,7 @@ def diffusion_3D(mask, free_pos, radius, iterations = 100, gpu_id=0):
     with cp.cuda.Device(gpu_id):
         structure = GPUball(radius)
         mask = cp.array(mask)
+        mask = GPUndimage.binary_opening(mask)
         init = cp.zeros(mask.shape, dtype=bool)
         init[:,free_pos,:] = True
 
@@ -92,8 +93,8 @@ def image_function(file):
     im = im==0
     
     diff_mean = hole_scan_3D(im)
-    holes1 = diff_mean[:,0,:]>-0.5
-    holes2 = diff_mean[:,-1,:]>-0.5
+    holes1 = diff_mean[:,0,:]>-0.3
+    holes2 = diff_mean[:,-1,:]>-0.3
     # CLhole_area = holes1*1+holes2*2
     CLholes = holes1.sum()/2+holes2.sum()/2
     
