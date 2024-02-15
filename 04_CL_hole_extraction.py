@@ -88,8 +88,8 @@ def image_function(file):
     fileroot = splitfile[0]
     
     im = skimage.io.imread(path)
-    im = im.transpose(2,0,1)[40:,...]
-    im = im==0
+    im = im.transpose(0,2,1)[:,40:,:]
+    im = im>0
     
     diff_mean = hole_scan_3D(im)
     holes1 = diff_mean[:,0,:]>-0.5
