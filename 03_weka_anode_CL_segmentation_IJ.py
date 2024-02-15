@@ -1,6 +1,7 @@
 """
 segment CL in postmortem XTM using pretrained weka classifier
 runs only within ImageJ
+manually open TrainableSegmentation once before running
 """
 from ij import IJ
 import trainableSegmentation
@@ -17,20 +18,24 @@ if not os.path.exists(outpath):
 
 files = os.listdir(datapath)
 
-segmentator = trainableSegmentation.WekaSegmentation()
-segmentator.loadClassifier(os.path.join(wekapath, 'classifier.model'))
-i = 0
-f = files[i]
-splitfile = f.split('_')
-fileroot = ''.join([i+'_' for i in splitfile[:-1]])
-fileroot = fileroot[:-1]
-print(fileroot)
-im = IJ.openImage(os.path.join(datapath,f))
-result = segmentator.applyClassifier(im, 0, 0) #(image to be segmented, number of threats (0=all), result type); result type 0 for labeled image, 1 for probability map of each phase (=hyperstack)
-
-targetpath = os.path.join(outpath, fileroot+'_ACL_segmented.tif')
-FileSaver(result).saveAsTiff(targetpath)
-im.close()
+for f in files:
+	#load file
+	splitfile = f.split('_')
+	fileroot = ''.join([i+'_' for i in splitfile[:-1]])
+	fileroot = fileroot[:-1]
+	print(fileroot)
+	im = IJ.openImage(os.path.join(datapath,f))
+	
+	#segment
+	segmentator = trainableSegmentation.WekaSegmentation(im)
+	segmentator.loadClassifier(os.path.join(wekapath, 'classifier.model'))
+	segmentator.applyClassifier( 0 )
+	result = segmentator.getClassifiedImage()
+	
+	#save to file
+	targetpath = os.path.join(outpath, fileroot+'_ACL_segmented.tif')
+	FileSaver(result).saveAsTiff(targetpath)
+	IJ.run("Close All")
 	
 	
 
