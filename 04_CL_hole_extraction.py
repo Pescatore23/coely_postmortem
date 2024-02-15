@@ -56,7 +56,7 @@ def diffusion_3D(mask, free_pos, radius, iterations = 100, gpu_id=0):
     with cp.cuda.Device(gpu_id):
         structure = GPUball(radius)
         mask = cp.array(mask)
-        mask = GPUndimage.binary_opening(mask)
+        mask = GPUndimage.binary_opening(mask, GPUball(2))
         init = cp.zeros(mask.shape, dtype=bool)
         init[:,free_pos,:] = True
 
@@ -105,12 +105,12 @@ files = os.listdir(segpath)
 
 datalines = []
 for file in files:
-    fileroot, Clholes = image_function(files[0])
-    datalines.append(fileroot + ' , ', str(Clholes)+'\n')
+    fileroot, Clholes = image_function(file)
+    datalines.append(fileroot + ' , '+ str(Clholes)+'\n')
     
 outfile = os.path.join(outpath, 'CL_hole_area.csv')
 
-with open(outfile) as f:
+with open(outfile, 'w') as f:
     f.writelines(datalines)
     
     
