@@ -23,7 +23,7 @@ toppath = '/mnt/nas_nanotomData/CT_Data_PSI/FR54/2023_COELY_postmortem'
 segpath = os.path.join(toppath, 'ABCZ_CL_segmented')
 outpath = os.path.join(toppath, 'ABCZ_CLhole_segmented')
 if not os.path.exists(outpath):
-    os.makedir(outpath)
+    os.makedirs(outpath)
 
 num_GPU = 5
 
@@ -82,12 +82,13 @@ def diffusion_3D(mask, free_pos, radius, iterations = 100, gpu_id=0):
 
 def image_function(file):
     path = os.path.join(segpath, file)
-    splitfile = file.split('_')
-    fileroot = ''.join([i+'_' for i in splitfile[:-1]])
-    fileroot = fileroot[:-2]
+    splitfile = file.split('__')
+    #fileroot = ''.join([i+'_' for i in splitfile[:-1]])
+#    fileroot = fileroot[:-1]
+    fileroot = splitfile[0]
     
     im = skimage.io.imread(path)
-    im = im.transpose(1,0,2) 
+    #im = im.transpose(1,0,2) 
     
     diff_mean = hole_scan_3D(im)
     holes1 = diff_mean[:,0,:]>-0.5
@@ -95,7 +96,7 @@ def image_function(file):
     # CLhole_area = holes1*1+holes2*2
     CLholes = holes1.sum()/2+holes2.sum()/2
     
-    outfile = os.path.join(outpath, fileroot+'_ACL_holes.tif')
+    outfile = os.path.join(outpath, fileroot+'__ACL_holes.tif')
     skimage.io.imsave(outfile, diff_mean)
     return CLholes
 
