@@ -40,7 +40,7 @@ def find_free_GPU_memory(gpu_id, limit=0.5):
 
 def hole_scan_3D(im3D, radius=2, iterations = 100, njobs=5):
     mask = im3D<1
-    scan_pos = range(0, mask.shape[1]-1, 4)
+    scan_pos = range(0, mask.shape[1]-1, 2)
     results = Parallel(n_jobs=njobs, temp_folder=temppath)(delayed(diffusion_3D)(mask, scan_pos[i], radius, iterations, i%5) for i in range(len(scan_pos)))
     diffs_stack = np.stack(results, axis=0)
     diff_mean = diffs_stack.mean(axis=0)
@@ -88,7 +88,7 @@ def image_function(file):
     fileroot = splitfile[0]
     
     im = skimage.io.imread(path)
-    im = im.transpose(1,0,2) 
+    im = im.transpose(2,0,1)[40:,...]
     im = im==0
     
     diff_mean = hole_scan_3D(im)
