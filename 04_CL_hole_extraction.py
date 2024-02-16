@@ -56,7 +56,7 @@ def diffusion_3D(mask, free_pos, radius, iterations = 100, gpu_id=0):
     with cp.cuda.Device(gpu_id):
         structure = GPUball(radius)
         mask = cp.array(mask)
-        mask = GPUndimage.binary_opening(mask, GPUball(2))
+        mask = GPUndimage.binary_erosion(mask, GPUball(1))
         init = cp.zeros(mask.shape, dtype=bool)
         init[:,free_pos,:] = True
 
@@ -89,6 +89,7 @@ def image_function(file):
     im = skimage.io.imread(path)
     im = im.transpose(0,2,1)[:,40:,:]
     im = im==0
+    projholes = im.min(axis=1).sum()
     
     diff_mean = hole_scan_3D(im)
     holes1 = diff_mean[:,0,:]>-0.3
@@ -98,17 +99,18 @@ def image_function(file):
     
     # outfile = os.path.join(outpath, fileroot+'__ACL_holes.tif')
     # skimage.io.imsave(outfile, diff_mean)
-    return fileroot, CLholes
+    return fileroot, CLholes, projholes
 
 
 files = os.listdir(segpath)
 
 datalines = []
+datalines.append('sample , CL holes , Cl holes projection \n' )
 for file in files:
-    fileroot, Clholes = image_function(file)
-    datalines.append(fileroot + ' , '+ str(Clholes)+'\n')
+    fileroot, Clholes, projholes = image_function(file)
+    datalines.append(fileroot + ' , '+ str(Clholes)+' , '+str(projholes)+'\n')
     
-outfile = os.path.join(outpath, 'CL_hole_area.csv')
+outfile = os.path.join(outpath, 'CL_hole_area_v4.csv')
 
 with open(outfile, 'w') as f:
     f.writelines(datalines)
