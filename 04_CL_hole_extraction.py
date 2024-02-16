@@ -56,7 +56,7 @@ def diffusion_3D(mask, free_pos, radius, iterations = 100, gpu_id=0):
     with cp.cuda.Device(gpu_id):
         structure = GPUball(radius)
         mask = cp.array(mask)
-        #mask = GPUndimage.binary_erosion(mask, GPUball(1))
+        mask = GPUndimage.binary_erosion(mask)
         init = cp.zeros(mask.shape, dtype=bool)
         init[:,free_pos,:] = True
 
@@ -89,7 +89,8 @@ def image_function(file):
     im = skimage.io.imread(path)
     im = im.transpose(0,2,1)[:,40:,:]
     im = im==0
-    projholes = im.min(axis=1).sum()
+    projholes = (~im.max(axis=1)).sum()
+    
     
     diff_mean = hole_scan_3D(im)
     holes1 = diff_mean[:,0,:]>-0.3
