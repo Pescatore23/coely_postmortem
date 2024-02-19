@@ -111,7 +111,7 @@ for file in files:
     fileroot, Clholes, projholes = image_function(file)
     datalines.append(fileroot + ' , '+ str(Clholes)+' , '+str(projholes)+'\n')
     
-outfile = os.path.join(outpath, 'CL_hole_area_v6.csv')
+outfile = os.path.join(outpath, 'CL_hole_area.csv')
 
 with open(outfile, 'w') as f:
     f.writelines(datalines)
