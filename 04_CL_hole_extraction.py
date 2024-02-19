@@ -98,8 +98,8 @@ def image_function(file):
     # CLhole_area = holes1*1+holes2*2
     CLholes = holes1.sum()/2+holes2.sum()/2
     
-    # outfile = os.path.join(outpath, fileroot+'__ACL_holes.tif')
-    # skimage.io.imsave(outfile, diff_mean)
+    outfile = os.path.join(outpath, fileroot+'__ACL_holes.tif')
+    skimage.io.imsave(outfile, diff_mean)
     return fileroot, CLholes, projholes
 
 
