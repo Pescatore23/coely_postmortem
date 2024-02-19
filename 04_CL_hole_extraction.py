@@ -56,7 +56,7 @@ def diffusion_3D(mask, free_pos, radius, iterations = 100, gpu_id=0):
     with cp.cuda.Device(gpu_id):
         structure = GPUball(radius)
         mask = cp.array(mask)
-        mask = GPUndimage.binary_erosion(mask)
+        mask = GPUndimage.binary_erosion(mask, structure=GPUball(1))
         init = cp.zeros(mask.shape, dtype=bool)
         init[:,free_pos,:] = True
 
@@ -98,8 +98,8 @@ def image_function(file):
     # CLhole_area = holes1*1+holes2*2
     CLholes = holes1.sum()/2+holes2.sum()/2
     
-    outfile = os.path.join(outpath, fileroot+'__ACL_holes.tif')
-    skimage.io.imsave(outfile, diff_mean)
+    # outfile = os.path.join(outpath, fileroot+'__ACL_holes.tif')
+    # skimage.io.imsave(outfile, diff_mean)
     return fileroot, CLholes, projholes
 
 
@@ -111,7 +111,7 @@ for file in files:
     fileroot, Clholes, projholes = image_function(file)
     datalines.append(fileroot + ' , '+ str(Clholes)+' , '+str(projholes)+'\n')
     
-outfile = os.path.join(outpath, 'CL_hole_area_v4.csv')
+outfile = os.path.join(outpath, 'CL_hole_area_v5.csv')
 
 with open(outfile, 'w') as f:
     f.writelines(datalines)
