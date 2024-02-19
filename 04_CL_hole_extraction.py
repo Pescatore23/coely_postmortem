@@ -87,14 +87,14 @@ def image_function(file):
     fileroot = splitfile[0]
     
     im = skimage.io.imread(path)
-    im = im.transpose(0,2,1)[:,40:,:]
+    im = im.transpose(0,2,1)[:,41:,:]
     im = im==0
     projholes = (~im.max(axis=1)).sum()
     
     
     diff_mean = hole_scan_3D(im)
-    holes1 = diff_mean[:,0,:]>-0.3
-    holes2 = diff_mean[:,-1,:]>-0.3
+    holes1 = diff_mean[:,1,:]>-0.3
+    holes2 = diff_mean[:,-2,:]>-0.3
     # CLhole_area = holes1*1+holes2*2
     CLholes = holes1.sum()/2+holes2.sum()/2
     
