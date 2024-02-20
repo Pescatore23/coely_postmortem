@@ -5,6 +5,8 @@ Created on Tue Feb 20 15:10:49 2024
 this script cuts through the membrane to yield a layer at the middle between the two catalyst layers
 regardless of orientation or membrane distortion like bending
 
+does not work for PTL samples ---> needs different solution
+
 @author: fische_r
 """
 
@@ -74,6 +76,7 @@ def sample_function(series, sample):
         imroot = series+'_'+sample+'_'+stage
         impath = os.path.join(sample_path, imroot+'rotcrop.tif')
         im = skimage.io.imread(impath)
+        im = im[100:1100,50:550,:]
         im = cut_through_membrane_center(im)
         skimage.io.imsave(os.path.join(outpath, imroot+'_membrane_cut.tif'), im)
         
