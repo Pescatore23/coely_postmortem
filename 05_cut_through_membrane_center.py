@@ -27,11 +27,14 @@ def search_crude_CL(im):
     CL = np.zeros((shp[0],shp[1],2), dtype = int)
     for x in range(shp[0]):
         for y in range(shp[1]):
-            peaks, props = sp.signal.find_peaks(im[x,y,:], height=6.25*med, distance=12, prominence=4.5*med)
+            peaks, props = sp.signal.find_peaks(im[x,y,:], height=5*med, distance=10)
             LP = len(peaks)
-            if LP>0 and LP<3:
+            if LP>2:
+                peaks.sort()
+                peaks = peaks[-2:]
+            if LP>0:
                 CL[x,y,-LP:] = peaks
-    return CL 
+    return CL    #, excess_peaks
 
 
 def find_center_surface(CL):
