@@ -27,22 +27,45 @@ def search_crude_CL(im):
     CL = np.zeros((shp[0],shp[1],2), dtype = int)
     for x in range(shp[0]):
         for y in range(shp[1]):
-            peaks, props = sp.signal.find_peaks(im[x,y,:], height=5*med, distance=10)
+            prof = im[x,y,:].copy()
+            # prof =  sp.signal.savgol_filter(prof, 10, 5)
+            peaks, props = sp.signal.find_peaks(prof, height=6*med, distance=15)
             LP = len(peaks)
-            if LP>2:
-                peaks.sort()
-                peaks = peaks[-2:]
             if LP>0:
+                peaks = peaks[:2]
                 CL[x,y,-LP:] = peaks
     return CL    #, excess_peaks
 
 
 def find_center_surface(CL):
-    CL0 = sp.ndimage.median_filter(CL[:,:,0], size = 10)
-    CL1 = sp.ndimage.median_filter(CL[:,:,1], size = 10)
-    IFcoords = np.uint16((CL0+CL1)/2)
-    return IFcoords
+    # some hard coded limits and median filtering
+    
+    CL0 = CL[:,:,0]
+    CL1 = CL[:,:,1]
 
+    medCL0 = np.median(CL0[CL0>0])
+    CL0[CL0<5] = medCL0
+
+    medCL1 = np.median(CL1)
+    CL1[CL1<medCL0+10] = medCL1
+
+    CL0 = sp.ndimage.median_filter(CL0, size = 10)
+    CL1 = sp.ndimage.median_filter(CL1, size = 10)
+    
+    diff = (CL1-CL0)/2
+    meddiff = np.median(diff)
+    print(meddiff)
+    diff[diff<15] = meddiff
+    diff[diff>50]  = meddiff
+    
+    IFcoords = np.uint16(CL1-diff)
+    coordmed = np.median(IFcoords)
+    IFcoords[IFcoords>70] = coordmed
+    IFcoords[IFcoords<20] = coordmed
+    IFcoords = sp.ndimage.median_filter(IFcoords, size = 10)
+    
+
+    return IFcoords
 
 def extract_center_face(im, IFcoords):
     shp = IFcoords.shape
@@ -51,8 +74,9 @@ def extract_center_face(im, IFcoords):
         for y in range(shp[1]):
             z = IFcoords[x,y]
             interface[x,y] = im[x,y,z]
-    return interface
+            # interface[x,y] = im[x-fs:x+fs,y-fs:y+fs,z-fs:z+fs].mean()  #small mean filtering
 
+    return interface
 
 def cut_through_membrane_center(im):
     CL = search_crude_CL(im)
