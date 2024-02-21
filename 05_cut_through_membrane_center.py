@@ -25,11 +25,12 @@ def search_crude_CL(im):
     med = np.median(im)
     shp = im.shape
     CL = np.zeros((shp[0],shp[1],2), dtype = int)
+    grad = -np.gradient(np.gradient(im, axis=2), axis=2)
+    # grad = np.gradient(im, axis=2)
     for x in range(shp[0]):
         for y in range(shp[1]):
-            prof = im[x,y,:].copy()
-            # prof =  sp.signal.savgol_filter(prof, 10, 5)
-            peaks, props = sp.signal.find_peaks(prof, height=6*med, distance=15)
+            prof = grad[x,y,:]
+            peaks, props = sp.signal.find_peaks(prof, height=6*med/8, distance=15, prominence=med/4)
             LP = len(peaks)
             if LP>0:
                 peaks = peaks[:2]
@@ -43,31 +44,34 @@ def find_center_surface(CL):
     CL0 = CL[:,:,0]
     CL1 = CL[:,:,1]
 
+    #global median filter
     medCL0 = np.median(CL0[CL0>0])
     CL0[CL0<5] = medCL0
 
     medCL1 = np.median(CL1)
     CL1[CL1<medCL0+10] = medCL1
 
-    CL0 = sp.ndimage.median_filter(CL0, size = 10)
-    CL1 = sp.ndimage.median_filter(CL1, size = 10)
+    # #local median filter
+    CL0 = sp.ndimage.median_filter(CL0, size = 4)
+    CL1 = sp.ndimage.median_filter(CL1, size = 4)
     
     diff = (CL1-CL0)/2
     meddiff = np.median(diff)
-    print(meddiff)
-    diff[diff<15] = meddiff
-    diff[diff>50]  = meddiff
+    diff[diff<10] = meddiff
+    diff[diff>60]  = meddiff
     
     IFcoords = np.uint16(CL1-diff)
-    coordmed = np.median(IFcoords)
-    IFcoords[IFcoords>70] = coordmed
-    IFcoords[IFcoords<20] = coordmed
-    IFcoords = sp.ndimage.median_filter(IFcoords, size = 10)
-    
 
+    # IFcoords = np.uint16((CL1+CL0)/2)
+    coordmed = np.median(IFcoords)
+    IFcoords[IFcoords>80] = coordmed
+    IFcoords[IFcoords<30] = coordmed
+    IFcoords = sp.ndimage.median_filter(IFcoords, size = 4)
+    
     return IFcoords
 
 def extract_center_face(im, IFcoords):
+
     shp = IFcoords.shape
     interface = np.zeros(shp)
     for x in range(shp[0]):
@@ -76,6 +80,12 @@ def extract_center_face(im, IFcoords):
             interface[x,y] = im[x,y,z]
             # interface[x,y] = im[x-fs:x+fs,y-fs:y+fs,z-fs:z+fs].mean()  #small mean filtering
 
+    return interface
+
+def cut_through_membrane_center(im):
+    CL = search_crude_CL(im)
+    IFcoords = find_center_surface(CL)
+    interface = extract_center_face(im, IFcoords)
     return interface
 
 def cut_through_membrane_center(im):
