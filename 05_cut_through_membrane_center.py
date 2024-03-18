@@ -5,18 +5,16 @@ Created on Tue Feb 20 15:10:49 2024
 this script cuts through the membrane to yield a layer at the middle between the two catalyst layers
 regardless of orientation or membrane distortion like bending
 
-does not work for PTL samples ---> needs different solution
-
 @author: fische_r
 """
 
 import os
-import skimage.io
-import scipy as sp
-import scipy.signal
-import scipy.ndimage
-import numpy as np
-from joblib import Parallel, delayed
+import skimage.io #scikit-image version 0.22.0
+import scipy as sp #scipy version 1.12.0
+import scipy.signal #scipy version 1.12.0
+import scipy.ndimage #scipy version 1.12.0
+import numpy as np #numpy version 1.26.4
+from joblib import Parallel, delayed #joblib version 1.3.2
 
 toppath = '/mpc/homes/fische_r/nanotom_data/2023_COELY_postmortem'
 temppath = '/mnt/SSD/fische_r/tmp'

@@ -6,8 +6,8 @@ Created on Wed Feb 21 15:15:13 2024
 """
 
 import os
-import skimage.io
-import numpy as np
+import skimage.io #scikit-image version 0.22.0
+import numpy as np #numpy version 1.26.4
 
 
 norm = 0.1

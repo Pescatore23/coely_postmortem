@@ -3,8 +3,8 @@ segment CL in postmortem XTM using pretrained weka classifier
 runs only within ImageJ
 manually open TrainableSegmentation once before running
 """
-from ij import IJ
-import trainableSegmentation
+from ij import IJ #ImageJ version 1.54f
+import trainableSegmentation #Trainable Weka Segmentation version 3.3.4
 import os
 from ij.io import FileSaver
 

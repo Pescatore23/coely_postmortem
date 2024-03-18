@@ -8,13 +8,13 @@ adapted from coely_tomcat 06b_analysis_CL_crumbling (https://gitlab.psi.ch/fcsd_
 """
 
 import os
-from joblib import Parallel, delayed
-import numpy as np
-import cupy as cp
-from time import sleep
-from cucim.skimage.morphology import ball as GPUball
-import cupyx.scipy.ndimage as GPUndimage
-import skimage.io
+from joblib import Parallel, delayed #joblib version 1.3.2
+import numpy as np #numpy version 1.26.4
+import cupy as cp #cupy version 13.0.0
+from time import sleep 
+from cucim.skimage.morphology import ball as GPUball #CuCim version 23.10.0
+import cupyx.scipy.ndimage as GPUndimage #cupy version 13.0.0
+import skimage.io #scikit-image version 0.22.0
 
 
 
