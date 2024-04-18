@@ -20,8 +20,11 @@ import skimage.io #scikit-image version 0.22.0
 
 temppath = '/mnt/SSD/fische_r/tmp'
 toppath = '/mnt/nas_nanotomData/CT_Data_PSI/FR54/2023_COELY_postmortem'
-segpath = os.path.join(toppath, 'ABCZ_CL_segmented')
-outpath = os.path.join(toppath, 'ABCZ_CLhole_segmented')
+# segpath = os.path.join(toppath, 'ABCZ_CL_segmented')
+# outpath = os.path.join(toppath, 'ABCZ_CLhole_segmented')
+
+segpath = os.path.join(toppath, 'DE_CL_segmented')
+outpath = os.path.join(toppath, 'DE_CLhole_segmented')
 if not os.path.exists(outpath):
     os.makedirs(outpath)
 
