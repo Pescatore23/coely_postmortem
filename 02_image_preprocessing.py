@@ -63,7 +63,10 @@ def sample_function(series, sample):
     for stage in stages:
         imroot = series+'_'+sample+'_'+stage
         impath = os.path.join(sample_path, imroot+'rotcrop.tif')
-        CLpath = os.path.join(outpath, imroot+'_extracted_CL.tif')
+        outpathCL = os.path.join(sample_path, 'CL_extraction')
+        if not os.path.exists(outpathCL):
+            os.mkdir(outpathCL)
+        CLpath = os.path.join(outpathCL, imroot+'_extracted_CL.tif')
         option = False
         
         if series == 'C' and sample == '4':
