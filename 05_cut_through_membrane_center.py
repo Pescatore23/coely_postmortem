@@ -92,11 +92,11 @@ def cut_through_membrane_center(im, ser):
     interface = extract_center_face(im, IFcoords)
     return interface
 
-def cut_through_membrane_center(im):
-    CL = search_crude_CL(im)
-    IFcoords = find_center_surface(CL)
-    interface = extract_center_face(im, IFcoords)
-    return interface
+# def cut_through_membrane_center(im):
+#     CL = search_crude_CL(im)
+#     IFcoords = find_center_surface(CL)
+#     interface = extract_center_face(im, IFcoords)
+#     return interface
 
 
 def sample_function(series, sample):
