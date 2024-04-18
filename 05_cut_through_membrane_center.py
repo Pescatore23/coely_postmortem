@@ -28,7 +28,7 @@ def search_crude_CL(im):
     for x in range(shp[0]):
         for y in range(shp[1]):
             prof = grad[x,y,:]
-            peaks, props = sp.signal.find_peaks(prof, height=6*med/8, distance=15, prominence=med/4)
+            peaks, props = sp.signal.find_peaks(prof, height=6*med/8, distance=15, prominence=med/4) #gives peaks sorted by height (= ACL first)
             LP = len(peaks)
             if LP>0:
                 peaks = peaks[:2]
@@ -36,8 +36,9 @@ def search_crude_CL(im):
     return CL    #, excess_peaks
 
 
-def find_center_surface(CL):
+def find_center_surface(CL, ser):
     # some hard coded limits and median filtering
+    # TODO: consider that position for custom BPM is closer to cathode
     
     CL0 = CL[:,:,0]
     CL1 = CL[:,:,1]
@@ -58,7 +59,12 @@ def find_center_surface(CL):
     diff[diff<10] = meddiff
     diff[diff>60]  = meddiff
     
-    IFcoords = np.uint16(CL1-diff)
+    if ser == 'D' or ser == 'E':
+        diff[diff<10] = meddiff
+        diff[diff>95]  = meddiff
+        IFcoords = np.uint16(CL1-48) #48 roughly the thickness of N115 in the images
+    else:
+        IFcoords = np.uint16(CL1-diff)
 
     # IFcoords = np.uint16((CL1+CL0)/2)
     coordmed = np.median(IFcoords)
@@ -80,9 +86,9 @@ def extract_center_face(im, IFcoords):
 
     return interface
 
-def cut_through_membrane_center(im):
+def cut_through_membrane_center(im, ser):
     CL = search_crude_CL(im)
-    IFcoords = find_center_surface(CL)
+    IFcoords = find_center_surface(CL, ser)
     interface = extract_center_face(im, IFcoords)
     return interface
 
@@ -112,7 +118,7 @@ def sample_function(series, sample):
         impath = os.path.join(sample_path, imroot+'rotcrop.tif')
         im = skimage.io.imread(impath)
         im = im[100:1100,50:550,:]
-        im = cut_through_membrane_center(im)
+        im = cut_through_membrane_center(im, series)
         skimage.io.imsave(os.path.join(outpath, imroot+'_membrane_cut.tif'), im)
         
         
@@ -129,7 +135,7 @@ def series_function(series, n_jobs = 8):
     
     
 series = ['A', 'B', 'C', 'Z']
-# series = ['C', 'Z']
+series = ['D', 'E']
 Parallel(n_jobs = 4, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
         
