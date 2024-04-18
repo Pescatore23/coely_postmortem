@@ -33,7 +33,7 @@ def unsharp_mask_as_IJ(im, sigma, weight):
     im = (im - weight*blur)/(1-weight)
     return im
 
-def crop_and_normalize(impath, crop=True):
+def crop_and_normalize(impath,CLpath, crop=True):
     im = skimage.io.imread(impath)
     im = im[100:1100,50:550,:] #crop to active area
     if crop: im = crop_cathode_CL(im)
@@ -41,6 +41,7 @@ def crop_and_normalize(impath, crop=True):
     
     #normalize image to similar grayvalues for all samples
     immax = im.max(axis=2)
+    skimage.io.imsave(CLpath, immax)
     med = np.median(immax)
     diff = med - 0.8
     im = im - diff
@@ -62,6 +63,7 @@ def sample_function(series, sample):
     for stage in stages:
         imroot = series+'_'+sample+'_'+stage
         impath = os.path.join(sample_path, imroot+'rotcrop.tif')
+        CLpath = os.path.join(outpath, imroot+'_extracted_CL.tif')
         option = False
         
         if series == 'C' and sample == '4':
@@ -71,9 +73,9 @@ def sample_function(series, sample):
         
         if option:
             impath = os.path.join(sample_path, imroot+'rotcrop_CCL_manually_removed.tif')
-            im = crop_and_normalize(impath, crop=False)
+            im = crop_and_normalize(impath, CLpath, crop=False)
         else:
-            im = crop_and_normalize(impath)
+            im = crop_and_normalize(impath, CLpath)
         
         outpath = os.path.join(temppath, 'normalized')
         if not os.path.exists(outpath):
