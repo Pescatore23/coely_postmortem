@@ -62,7 +62,7 @@ def find_center_surface(CL, ser):
     if ser == 'D' or ser == 'E':
         diff[diff<10] = meddiff
         diff[diff>95]  = meddiff
-        IFcoords = np.uint16(CL1-48) #48 roughly the thickness of N115 in the images
+        IFcoords = np.uint16(CL1+22) #22 roughly the thickness of FAA in px
     else:
         IFcoords = np.uint16(CL1-diff)
 
