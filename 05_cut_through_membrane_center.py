@@ -62,7 +62,7 @@ def find_center_surface(CL, ser):
     if ser == 'D' or ser == 'E':
         diff[diff<10] = meddiff
         diff[diff>95]  = meddiff
-        IFcoords = np.uint16(CL0+27) #20 roughly the thickness of FAA in px, 27 checks if it can find the Nafiuon membrane
+        IFcoords = np.uint16(CL0+30) #20 roughly the thickness of FAA in px, 30 checks if it can find the Nafiuon membrane
     else:
         IFcoords = np.uint16(CL1-diff)
 
@@ -81,7 +81,7 @@ def extract_center_face(im, IFcoords):
     for x in range(shp[0]):
         for y in range(shp[1]):
             z = IFcoords[x,y]
-            interface[x,y] = im[x,y,z]
+            interface[x,y] = im[x,y,z-4:z+4].min()
             # interface[x,y] = im[x-fs:x+fs,y-fs:y+fs,z-fs:z+fs].mean()  #small mean filtering
 
     return interface
