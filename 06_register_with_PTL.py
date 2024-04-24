@@ -149,11 +149,15 @@ def sample_function(series, sample, toppath=toppath):
     # sample paths do work for series D and E, there will be issues with non-default namings
     sample_path  = os.path.join(toppath, series+'_series', series+'_'+sample)
     stages = ['preop', 'postop_1', 'postop_2']
+    if series+'_'+sample == 'D_1': stages = ['preop', 'postop1', 'postop2']
+    
     ims = []
     for stage in stages:
         path = os.path.join(sample_path , series+'_'+sample+'_'+stage, series+'_'+sample+'_'+stage+'_.vol')
         im = get_stage_im(path, series, sample, stage)
         ims.append(im)
+        
+    stages = ['preop', 'postop_1', 'postop_2'] #revert to default naming if necessary
     
     preopim = ims[0]
     postop1im = ims[1]
