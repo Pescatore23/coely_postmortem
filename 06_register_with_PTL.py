@@ -29,7 +29,7 @@ parameterMap = sitk.GetDefaultParameterMap("rigid") #get default settins for rig
 parameterMap["FixedImagePyramid"] = ["FixedShrinkingImagePyramid"]
 parameterMap["MovingImagePyramid"] = ["MovingShrinkingImagePyramid"]
 parameterMap["NumberOfResolutions"] = ["2"]
-parameterMap["MaximumNumberOfIterations"] = ["1500"]
+parameterMap["MaximumNumberOfIterations"] = ["5000"]
 parameterMap["AutomaticTransformInitialization"] = ["true"]
 parameterMap["AutomaticScalesEstimation"] = ["true"]
 parameterMap["NewSamplesEveryIteration"] = ["true"]
@@ -136,20 +136,23 @@ def register_images_general(im_fixed, im_tomove, parameter_map=parameterMap, im_
         # Casting type just in case
         itk_image_mask = sitk.Cast(itk_image_mask, sitk.sitkUInt8)
         elastixImageFilter.SetFixedMask(itk_image_mask)
-
+    
+    elastixImageFilter.SetLogToConsole(False) #disable loggingdd
     elastixImageFilter.Execute()
     
     im_aligned = elastixImageFilter.GetResultImage()
     # Transfor again to numpy
     im_aligned = sitk.GetArrayFromImage(im_aligned)
-    return np.uint16(im_aligned)
+    return np.uint16(im_aligned) #careful with this line with float images from nanotom
     
 
 def sample_function(series, sample, toppath=toppath):
     # sample paths do work for series D and E, there will be issues with non-default namings
     sample_path  = os.path.join(toppath, series+'_series', series+'_'+sample)
     stages = ['preop', 'postop_1', 'postop_2']
-
+    mask = skimage.io.imread(os.path.join(sample_path, series+'_'+sample+'_PTL_mask.tif'))
+    mask = mask>0
+    mask = np.transpose(mask, (2,1,0))
     ims = []
     for stage in stages:
         path = os.path.join(sample_path , series+'_'+sample+'_'+stage, series+'_'+sample+'_'+stage+'_.vol')
@@ -168,18 +171,18 @@ def sample_function(series, sample, toppath=toppath):
     postop2im = ims[2]
     
     #register postop images
-    postop1im = register_images_general(preopim, postop1im)
-    postop2im = register_images_general(preopim, postop2im)
+    postop1im = register_images_general(preopim, postop1im, mask)
+    postop2im = register_images_general(preopim, postop2im, mask)
     
     #save 16bit images
     outputpath = os.path.join(sample_path, series+'_'+sample+'_'+stages[0]+'_registered.tif')
-    skimage.io.imsave(outputpath, preopim)
+    skimage.io.imsave(outputpath, np.transpose(preopim,(2,1,0)))
     
     outputpath = os.path.join(sample_path, series+'_'+sample+'_'+stages[1]+'_registered.tif')
-    skimage.io.imsave(outputpath, postop1im)
+    skimage.io.imsave(outputpath, np.transpose(postop1im,(2,1,0)))
     
     outputpath = os.path.join(sample_path, series+'_'+sample+'_'+stages[2]+'_registered.tif')
-    skimage.io.imsave(outputpath, postop2im)
+    skimage.io.imsave(outputpath, np.transpose(postop2im,(2,1,0)))
 
 sample_function('D', '1')
 
