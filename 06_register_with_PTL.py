@@ -84,7 +84,7 @@ def get_stage_im(path, series, sample, stage, proc_dict=processing_dict, vmin=vm
     b = a + 300 #modify for larger ROI
     im = im[a:b,c:d,e:f]
     #convert to uint16 with the given range
-    im 
+    im = float_to_uint16(im)
     return im
 
 
