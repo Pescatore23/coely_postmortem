@@ -154,8 +154,8 @@ def sample_function(series, sample, toppath=toppath):
     # mask = skimage.io.imread(os.path.join(sample_path, series+'_'+sample+'_PTL_mask.tif'))
     # mask = mask>0
     # mask = np.transpose(mask, (2,1,0))
-    mask = np.zeros((300,710,1300), dtype = np.uint8)
-    mask[70:,:,:] = 1
+    mask = np.zeros((300,710,1300), dtype = bool)
+    mask[70:,:,:] = True
     ims = []
     for stage in stages:
         path = os.path.join(sample_path , series+'_'+sample+'_'+stage, series+'_'+sample+'_'+stage+'_.vol')
