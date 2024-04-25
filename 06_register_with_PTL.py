@@ -71,7 +71,7 @@ def float_to_uint16(im, vmin=vmin, vmax=vmax):
     im[im<0] = 0
     im = im/(vmax-vmin)
     im[im>1] = 1
-    im = im*(2**16-1)
+    im = im*(2**16-1)*0.95
     im = np.uint16(im)
     return im
 
@@ -153,8 +153,8 @@ def sample_function(series, sample, toppath=toppath):
     # mask = skimage.io.imread(os.path.join(sample_path, series+'_'+sample+'_PTL_mask.tif'))
     # mask = mask>0
     # mask = np.transpose(mask, (2,1,0))
-    mask = np.zeros((300,700,1300), dtype = np.uint8)
-    mask[150:220,100:-100,200:-200] = 1
+    # mask = np.zeros((300,700,1300), dtype = np.uint8)
+    # mask[150:220,100:-100,200:-200] = 1
     ims = []
     for stage in stages:
         path = os.path.join(sample_path , series+'_'+sample+'_'+stage, series+'_'+sample+'_'+stage+'_.vol')
@@ -173,8 +173,8 @@ def sample_function(series, sample, toppath=toppath):
     postop2im = ims[2]
     
     #register postop images
-    postop1im = register_images_general(preopim, postop1im, im_mask=mask)
-    postop2im = register_images_general(preopim, postop2im, im_mask = mask)
+    postop1im = register_images_general(preopim, postop1im)
+    postop2im = register_images_general(preopim, postop2im)
     
     #save 16bit images
     outputpath = os.path.join(sample_path, series+'_'+sample+'_'+stages[0]+'_registered.tif')
