@@ -82,6 +82,7 @@ def get_stage_im(path, series, sample, stage, proc_dict=processing_dict, vmin=vm
     crops = processing_dict[series+'_'+sample]['cropping']
     a,b,c,d,e,f = crops[stage]
     b = a + 300 #modify for larger ROI
+    a = a - 10  # -10 minimum: will lead to a=0 for E_1
     im = im[a:b,c:d,e:f]
     #convert to uint16 with the given range
     im = float_to_uint16(im)
@@ -173,8 +174,10 @@ def sample_function(series, sample, toppath=toppath):
     postop2im = ims[2]
     
     #register postop images
-    postop1im = register_images_general(preopim, postop1im)
-    postop2im = register_images_general(preopim, postop2im)
+    # postop1im = register_images_general(preopim, postop1im)
+    # postop2im = register_images_general(preopim, postop2im)
+    preopim = register_images_general(postop1im, preopim)
+    postop2im = register_images_general(postop1im, postop2im)
     
     #save 16bit images
     outputpath = os.path.join(sample_path, series+'_'+sample+'_'+stages[0]+'_registered.tif')
