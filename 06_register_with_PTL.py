@@ -85,7 +85,7 @@ def get_stage_im(path, series, sample, stage, proc_dict=processing_dict, vmin=vm
     a = a - 10  # -10 minimum: will lead to a=0 for E_1
     im = im[a:b,c:d,e:f]
     #convert to uint16 with the given range
-    im = float_to_uint16(im)
+    # im = float_to_uint16(im)
     return im
 
 
@@ -144,7 +144,7 @@ def register_images_general(im_fixed, im_tomove, parameter_map=parameterMap, im_
     im_aligned = elastixImageFilter.GetResultImage()
     # Transfor again to numpy
     im_aligned = sitk.GetArrayFromImage(im_aligned)
-    return np.uint16(im_aligned) #careful with this line with float images from nanotom
+    return im_aligned #careful with this line with float images from nanotom
     
 
 def sample_function(series, sample, toppath=toppath):
@@ -178,6 +178,10 @@ def sample_function(series, sample, toppath=toppath):
     # postop2im = register_images_general(preopim, postop2im)
     preopim = register_images_general(postop1im, preopim, im_mask = mask)
     postop2im = register_images_general(postop1im, postop2im, im_mask = mask)
+    
+    # preopim = float_to_uint16(preopim)
+    # postop1im  = float_to_uint16(postop2im )
+    # postop2im  = float_to_uint16(postop2im )
     
     #save 16bit images
     outputpath = os.path.join(sample_path, series+'_'+sample+'_'+stages[0]+'_registered.tif')
