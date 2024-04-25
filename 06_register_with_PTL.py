@@ -193,5 +193,12 @@ def sample_function(series, sample, toppath=toppath):
     outputpath = os.path.join(sample_path, series+'_'+sample+'_'+stages[2]+'_registered.tif')
     skimage.io.imsave(outputpath, np.transpose(postop2im,(2,1,0)))
 
-sample_function('D', '1')
+print('D2')
+sample_function('D', '2')
+
+print('E3')
+sample_function('E', '3')
+
+print('E4')
+sample_function('E', '4')
 
