@@ -82,7 +82,7 @@ def get_stage_im(path, series, sample, stage, proc_dict=processing_dict, vmin=vm
     crops = processing_dict[series+'_'+sample]['cropping']
     a,b,c,d,e,f = crops[stage]
     b = a + 300 #modify for larger ROI
-    a = a - 10  # -10 minimum: will lead to a=0 for E_1
+    # a = a - 10  # -10 minimum: will lead to a=0 for E_1
     im = im[a:b,c:d,e:f]
     #convert to uint16 with the given range
     # im = float_to_uint16(im)
@@ -138,7 +138,7 @@ def register_images_general(im_fixed, im_tomove, parameter_map=parameterMap, im_
         itk_image_mask = sitk.Cast(itk_image_mask, sitk.sitkUInt8)
         elastixImageFilter.SetFixedMask(itk_image_mask)
     
-    elastixImageFilter.SetLogToConsole(False) #disable loggingdd
+    # elastixImageFilter.SetLogToConsole(False) #disable loggingdd
     elastixImageFilter.Execute()
     
     im_aligned = elastixImageFilter.GetResultImage()
@@ -154,7 +154,7 @@ def sample_function(series, sample, toppath=toppath):
     # mask = skimage.io.imread(os.path.join(sample_path, series+'_'+sample+'_PTL_mask.tif'))
     # mask = mask>0
     # mask = np.transpose(mask, (2,1,0))
-    mask = np.zeros((300,710,1300), dtype = np.uint8)
+    mask = np.zeros((300,700,1300), dtype = np.uint8)
     mask[70:,:,:] = 1
     ims = []
     for stage in stages:
@@ -194,7 +194,7 @@ def sample_function(series, sample, toppath=toppath):
     skimage.io.imsave(outputpath, np.transpose(postop2im,(2,1,0)))
 
 print('D1')
-sample_function('D', '1')
+#sample_function('D', '1')
 
 print('D2')
 sample_function('D', '2')
