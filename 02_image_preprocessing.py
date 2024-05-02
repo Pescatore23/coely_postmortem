@@ -80,7 +80,7 @@ def sample_function(series, sample):
         else:
             im = crop_and_normalize(impath, CLpath)
         
-        outpath = os.path.join(temppath, 'normalized')
+        outpath = os.path.join(toppath, series+'_normalized')
         if not os.path.exists(outpath):
             os.mkdir(outpath)
         skimage.io.imsave(os.path.join(outpath, imroot+'_normalized.tif'), im)
@@ -99,6 +99,7 @@ def series_function(series, n_jobs = 8):
 series = ['A', 'B', 'C', 'Z']
 # series = ['C', 'Z']
 series = ['D', 'E']
+series = ['G']
 Parallel(n_jobs = 4, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
     
