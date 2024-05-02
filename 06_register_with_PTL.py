@@ -147,10 +147,10 @@ def register_images_general(im_fixed, im_tomove, parameter_map=parameterMap, im_
     return im_aligned #careful with this line with float images from nanotom
     
 
-def sample_function(series, sample, toppath=toppath):
+def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_1', 'postop_2']):
     # sample paths do work for series D and E, there will be issues with non-default namings
     sample_path  = os.path.join(toppath, series+'_series', series+'_'+sample)
-    stages = ['preop', 'postop_1', 'postop_2']
+    
     # mask = skimage.io.imread(os.path.join(sample_path, series+'_'+sample+'_PTL_mask.tif'))
     # mask = mask>0
     # mask = np.transpose(mask, (2,1,0))
@@ -177,7 +177,8 @@ def sample_function(series, sample, toppath=toppath):
     # postop1im = register_images_general(preopim, postop1im)
     # postop2im = register_images_general(preopim, postop2im)
     preopim = register_images_general(postop1im, preopim, im_mask = mask)
-    postop2im = register_images_general(postop1im, postop2im, im_mask = mask)
+    if 'postop_2' in stages:
+        postop2im = register_images_general(postop1im, postop2im, im_mask = mask)
     
     # preopim = float_to_uint16(preopim)
     # postop1im  = float_to_uint16(postop2im )
@@ -190,8 +191,9 @@ def sample_function(series, sample, toppath=toppath):
     outputpath = os.path.join(sample_path, series+'_'+sample+'_'+stages[1]+'_registered.tif')
     skimage.io.imsave(outputpath, np.transpose(postop1im,(2,1,0)))
     
-    outputpath = os.path.join(sample_path, series+'_'+sample+'_'+stages[2]+'_registered.tif')
-    skimage.io.imsave(outputpath, np.transpose(postop2im,(2,1,0)))
+    if 'postop_2' in stages:
+        outputpath = os.path.join(sample_path, series+'_'+sample+'_'+stages[2]+'_registered.tif')
+        skimage.io.imsave(outputpath, np.transpose(postop2im,(2,1,0)))
 
 # print('D1')
 #sample_function('D', '1')
@@ -209,5 +211,5 @@ def sample_function(series, sample, toppath=toppath):
 #sample_function('G', '1')
 
 print('G2')
-sample_function('G', '2')
+sample_function('G', '2', stages = ['preop', 'postop_1'])
 
