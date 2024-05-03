@@ -171,7 +171,7 @@ def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_
         
     preopim = ims[0]
     postop1im = ims[1]
-    postop2im = ims[2]
+    if 'postop_2'in stages: postop2im = ims[2]
     
     #register postop images
     # postop1im = register_images_general(preopim, postop1im)
