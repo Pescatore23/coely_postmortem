@@ -90,6 +90,8 @@ def image_function(file):
     fileroot = splitfile[0]
     
     im = skimage.io.imread(path)
+    if segpath == os.path.join(toppath, 'G_CL_segmented'):
+        im = im[:,:,40:170] #crop segmented images for G series, because initial crop was wider to encompass the PTL for registartion for the first time
     im = im.transpose(0,2,1)[:,41:,:]
     im = im==0
     projholes = (~im.max(axis=1)).sum()
