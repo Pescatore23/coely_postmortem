@@ -28,12 +28,13 @@ for f in files:
 	splitfile = f.split('_')
 	fileroot = ''.join([i+'_' for i in splitfile[:-1]])
 	fileroot = fileroot[:-1]
+	#if not fileroot[:3] == 'G_3': continue
 	print(fileroot)
 	im = IJ.openImage(os.path.join(datapath,f))
 	
 	#segment
 	segmentator = trainableSegmentation.WekaSegmentation(im)
-	segmentator.loadClassifier(os.path.join(wekapath, 'classifier.model'))
+	segmentator.loadClassifier(os.path.join(wekapath, 'classifier_G3_preop.model'))
 	segmentator.applyClassifier( 0 )
 	result = segmentator.getClassifiedImage()
 	
