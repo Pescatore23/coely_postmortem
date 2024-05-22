@@ -100,7 +100,7 @@ def series_function(series, n_jobs = 8):
 series = ['A', 'B', 'C', 'Z']
 # series = ['C', 'Z']
 series = ['D', 'E']
-series = ['G']
+series = ['F']
 Parallel(n_jobs = 4, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
     

@@ -207,9 +207,11 @@ def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_
 #print('E4')
 #sample_function('E', '4')
 
-print('G3')
-sample_function('G', '3')
+#print('G3')
+#sample_function('G', '3')
 
 #print('G2')
 #sample_function('G', '2', stages = ['preop', 'postop_1'])
+
+sample_function('F', '1')
 
