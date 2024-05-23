@@ -165,6 +165,10 @@ def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_
             path = os.path.join(sample_path , series+'_'+sample+'_postop1', series+'_'+sample+'_postop1_.vol')
         if series+'_'+sample == 'D_1' and stage == 'postop_2':
             path = os.path.join(sample_path , series+'_'+sample+'_postop2', series+'_'+sample+'_postop2_.vol')
+        if series+'_'+sample == 'C_1' and stage == 'postop_2':
+            path = os.path.join(sample_path , series+'_'+sample+'_postop2b', series+'_'+sample+'_postop2b_.vol')
+        if series+'_'+sample == 'C_4' and stage == 'preop':
+            path = os.path.join(sample_path , series+'_'+sample+'_preopb', series+'_'+sample+'_preopb_.vol')
             
         im = get_stage_im(path, series, sample, stage)
         ims.append(im)
@@ -220,6 +224,19 @@ def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_
 
 # sample_function('F', '1
 
-print('G4')
-sample_function('G', '4', stages = ['preop', 'postop_1', 'postop_2', 'postop_3'])
+# print('G4')
+# sample_function('G', '4', stages = ['preop', 'postop_1', 'postop_2', 'postop_3'])
+
+print('C1')
+sample_function('C', '1')
+
+print('C2')
+sample_function('C', '2')
+
+print('C3')
+sample_function('C', '3', stages = ['preop', 'postop_1'])
+
+print('C4')
+sample_function('C', '4')
+
 
