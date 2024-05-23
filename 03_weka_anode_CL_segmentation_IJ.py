@@ -28,7 +28,7 @@ for f in files:
 	splitfile = f.split('_')
 	fileroot = ''.join([i+'_' for i in splitfile[:-1]])
 	fileroot = fileroot[:-1]
-	#if not fileroot[:3] == 'G_3': continue
+	if not fileroot[:3] == 'G_4': continue
 	print(fileroot)
 	im = IJ.openImage(os.path.join(datapath,f))
 	
