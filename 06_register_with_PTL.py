@@ -147,13 +147,13 @@ def register_images_general(im_fixed, im_tomove, parameter_map=parameterMap, im_
         itk_image_mask = sitk.Cast(itk_image_mask, sitk.sitkUInt8)
         elastixImageFilter.SetFixedMask(itk_image_mask)
     
-    # elastixImageFilter.SetLogToConsole(False) #disable loggingdd
+    elastixImageFilter.SetLogToConsole(False) #disable logging
     elastixImageFilter.Execute()
     
     im_aligned = elastixImageFilter.GetResultImage()
     # Transfor again to numpy
     im_aligned = sitk.GetArrayFromImage(im_aligned)
-    return im_aligned #careful with this line with float images from nanotom
+    return im_aligned #careful when calling .astype in this line with float images from nanotom
     
 
 def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_1', 'postop_2']):
