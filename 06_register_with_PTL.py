@@ -81,6 +81,12 @@ def get_stage_im(path, series, sample, stage, proc_dict=processing_dict, vmin=vm
     im = rotate_im(im, angle1, angle2, angle3)
     crops = processing_dict[series+'_'+sample]['cropping']
     a,b,c,d,e,f = crops[stage]
+    if series+'_'+sample == 'C_1':
+        a = a - 50
+        c = c - 75
+        d = d - 75
+        e = e - 150
+        f = f - 150
     b = a + 300 #modify for larger ROI
     # a = a - 10  # -10 minimum: will lead to a=0 for E_1
     im = im[a:b,c:d,e:f]
@@ -227,8 +233,8 @@ def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_
 # print('G4')
 # sample_function('G', '4', stages = ['preop', 'postop_1', 'postop_2', 'postop_3'])
 
-#print('C1')
-#sample_function('C', '1')
+print('C1')
+sample_function('C', '1')
 
 #print('C2')
 #sample_function('C', '2')
@@ -236,7 +242,7 @@ def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_
 #print('C3')
 #sample_function('C', '3', stages = ['preop', 'postop_1'])
 
-print('C4')
-sample_function('C', '4')
+# print('C4')
+# sample_function('C', '4')
 
 
