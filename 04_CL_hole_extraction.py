@@ -23,8 +23,8 @@ toppath = '/mnt/nas_nanotomData/CT_Data_PSI/FR54/2023_COELY_postmortem'
 # segpath = os.path.join(toppath, 'ABCZ_CL_segmented')
 # outpath = os.path.join(toppath, 'ABCZ_CLhole_segmented')
 
-segpath = os.path.join(toppath, 'F_CL_segmented')
-outpath = os.path.join(toppath, 'F_CLhole_segmented')
+segpath = os.path.join(toppath, 'C_CL_segmented')
+outpath = os.path.join(toppath, 'C_CLhole_segmented')
 if not os.path.exists(outpath):
     os.makedirs(outpath)
 
@@ -90,7 +90,7 @@ def image_function(file):
     fileroot = splitfile[0]
     
     im = skimage.io.imread(path)
-    if segpath == os.path.join(toppath, 'F_CL_segmented'):
+    if segpath == os.path.join(toppath, 'C_CL_segmented'):
         im = im[:,:,40:170] #crop segmented images for G series, because initial crop was wider to encompass the PTL for registartion for the first time
     im = im.transpose(0,2,1)[:,41:,:]
     im = im==0

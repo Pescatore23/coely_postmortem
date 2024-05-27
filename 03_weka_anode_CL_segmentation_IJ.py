@@ -15,8 +15,8 @@ toppath = '/mnt/nas_nanotomData/CT_Data_PSI/FR54/2023_COELY_postmortem'
 # outpath = os.path.join(toppath, 'ABCZ_CL_segmented')
 
 wekapath = os.path.join(toppath, 'Weka_segmentation_CL_series_G')
-datapath = os.path.join(toppath, 'F_normalized')
-outpath = os.path.join(toppath, 'F_CL_segmented')
+datapath = os.path.join(toppath, 'C_normalized')
+outpath = os.path.join(toppath, 'C_CL_segmented')
 
 if not os.path.exists(outpath):
 	os.makedirs(outpath)
