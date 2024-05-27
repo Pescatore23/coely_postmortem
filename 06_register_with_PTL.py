@@ -82,11 +82,11 @@ def get_stage_im(path, series, sample, stage, proc_dict=processing_dict, vmin=vm
     crops = processing_dict[series+'_'+sample]['cropping']
     a,b,c,d,e,f = crops[stage]
     if series+'_'+sample == 'C_1':
-        a = a - 50
+        a = a - 20
         c = c - 75
         d = d - 75
-        e = e - 150
-        f = f - 150
+        e = e - 80
+        f = f - 80
     b = a + 300 #modify for larger ROI
     # a = a - 10  # -10 minimum: will lead to a=0 for E_1
     im = im[a:b,c:d,e:f]
