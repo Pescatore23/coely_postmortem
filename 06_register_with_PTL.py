@@ -29,14 +29,14 @@ parameterMap = sitk.GetDefaultParameterMap("rigid") #get default settins for rig
 parameterMap["FixedImagePyramid"] = ["FixedShrinkingImagePyramid"]
 parameterMap["MovingImagePyramid"] = ["MovingShrinkingImagePyramid"]
 parameterMap["NumberOfResolutions"] = ["2"]
-parameterMap["MaximumNumberOfIterations"] = ["5000"]
+parameterMap["MaximumNumberOfIterations"] = ["10000"]
 parameterMap["AutomaticTransformInitialization"] = ["true"]
 parameterMap["AutomaticScalesEstimation"] = ["true"]
 parameterMap["NewSamplesEveryIteration"] = ["true"]
 parameterMap["NewSamplesEveryIteration"] = ["true"]
 parameterMap["Interpolator"] = ["BSplineInterpolator"]
-parameterMap["NumberOfSamplesForExactGradient"] = ["10000"]
-parameterMap["NumberOfSpatialSamples"] = ["10000"]
+parameterMap["NumberOfSamplesForExactGradient"] = ["15000"]
+parameterMap["NumberOfSpatialSamples"] = ["15000"]
 
 
 def load_nanotom(path, pcrSizeX = 0, pcrSizeY = 0, pcrSizeZ = 0):
@@ -87,6 +87,9 @@ def get_stage_im(path, series, sample, stage, proc_dict=processing_dict, vmin=vm
         d = d - 75
         e = e - 80
         f = f - 80
+    if series+'_'+sample == 'C_2':
+        c = c - 10
+        d = d - 10
     b = a + 300 #modify for larger ROI
     # a = a - 10  # -10 minimum: will lead to a=0 for E_1
     im = im[a:b,c:d,e:f]
@@ -236,8 +239,8 @@ def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_
 print('C1')
 sample_function('C', '1')
 
-#print('C2')
-#sample_function('C', '2')
+print('C2')
+sample_function('C', '2')
 
 #print('C3')
 #sample_function('C', '3', stages = ['preop', 'postop_1'])
