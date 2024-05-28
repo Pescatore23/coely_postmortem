@@ -158,7 +158,7 @@ def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_
     # mask = mask>0
     # mask = np.transpose(mask, (2,1,0))
     mask = np.zeros((300,700,1300), dtype = np.uint8)
-    mask[70:,:,:] = 1
+    mask[50:,:,:] = 1
     ims = []
     for stage in stages:
         path = os.path.join(sample_path , series+'_'+sample+'_'+stage, series+'_'+sample+'_'+stage+'_.vol')
@@ -239,7 +239,7 @@ sample_function('C', '1')
 #print('C3')
 #sample_function('C', '3', stages = ['preop', 'postop_1'])
 
-print('C4')
-sample_function('C', '4')
+# print('C4')
+# sample_function('C', '4')
 
 
