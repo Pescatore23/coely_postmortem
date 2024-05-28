@@ -20,7 +20,7 @@ def crop_cathode_CL(im):
     for x in range(im.shape[0]):
         for y in range(im.shape[1]):
             crop = area[x,y]
-            if np.abs(crop-med)>30: #30 for D and E series, was 10 before
+            if np.abs(crop-med)>10: #30 for D and E series, was 10 before
                 crop = med
             crop = crop+10
             im[x,y,:crop] = 0
@@ -69,8 +69,7 @@ def sample_function(series, sample):
         CLpath = os.path.join(outpathCL, imroot+'_extracted_CL.tif')
         option = False
         
-        if series == 'C' and sample == '4':
-            option = True
+        
         if series == 'Z' and sample == '4':
             option = True
         
