@@ -96,7 +96,13 @@ def image_function(file):
     center = np.argmin(imraw.sum(axis=(0,1)))
     
     im = np.zeros((1000,500,100))
-    im[...,0:100] = imraw[:,:,center-50:center+50]==0
+    imcrop = imraw[:,:,center-50:center+50]==0
+    shp = imcrop.shape
+    z0 = int(shp[2]/2)
+    try:
+        im[...,50-z0:50+z0] = imcrop 
+    except:
+        im[...,50-z0+1:50+z0] = imcrop 
     im = im.transpose(0,2,1)#[:,41:,:]
     
     projholes = (~im.max(axis=1)).sum()
