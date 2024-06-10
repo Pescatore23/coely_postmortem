@@ -15,8 +15,8 @@ toppath = '/mnt/nas_nanotomData/CT_Data_PSI/FR54/2023_COELY_postmortem'
 # outpath = os.path.join(toppath, 'ABCZ_CL_segmented')
 
 wekapath = os.path.join(toppath, 'Weka_segmentation_CL_series_G')
-datapath = os.path.join(toppath, 'C_normalized')
-outpath = os.path.join(toppath, 'C_CL_segmented')
+datapath = os.path.join(toppath, 'DE_normalized')
+outpath = os.path.join(toppath, 'DE_CL_segmented')
 
 if not os.path.exists(outpath):
 	os.makedirs(outpath)
@@ -28,7 +28,7 @@ for f in files:
 	splitfile = f.split('_')
 	fileroot = ''.join([i+'_' for i in splitfile[:-1]])
 	fileroot = fileroot[:-1]
-	# if not fileroot[:3] == 'G_4': continue
+	# if not fileroot[:3] == 'D_3': continue
 	print(fileroot)
 	im = IJ.openImage(os.path.join(datapath,f))
 	
