@@ -89,12 +89,9 @@ def image_function(file):
     splitfile = file.split('__')
     fileroot = splitfile[0]
     
+    # put CL into the center of the simualtion domain to be consistent
     imraw = skimage.io.imread(path)
-    
-    # if segpath == os.path.join(toppath, 'C_CL_segmented'):
-    #     im = im[:,:,40:170] #crop segmented images for G series, because initial crop was wider to encompass the PTL for registartion for the first time
     center = np.argmin(imraw.sum(axis=(0,1)))
-    
     im = np.zeros((1000,500,100),dtype=bool)
     imcrop = imraw[:,:,center-50:center+50]==0
     shp = imcrop.shape
