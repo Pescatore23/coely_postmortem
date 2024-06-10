@@ -95,14 +95,14 @@ def image_function(file):
     #     im = im[:,:,40:170] #crop segmented images for G series, because initial crop was wider to encompass the PTL for registartion for the first time
     center = np.argmin(imraw.sum(axis=(0,1)))
     
-    im = np.zeros((1000,500,100))
+    im = np.zeros((1000,500,100),dtype=bool)
     imcrop = imraw[:,:,center-50:center+50]==0
     shp = imcrop.shape
     z0 = int(shp[2]/2)
     try:
         im[...,50-z0:50+z0] = imcrop 
     except:
-        im[...,50-z0+1:50+z0] = imcrop 
+        im[...,50-z0-1:50+z0] = imcrop 
     im = im.transpose(0,2,1)#[:,41:,:]
     
     projholes = (~im.max(axis=1)).sum()
