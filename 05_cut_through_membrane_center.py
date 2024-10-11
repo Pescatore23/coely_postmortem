@@ -135,7 +135,13 @@ def series_function(series, n_jobs = 8):
     
     
 series = ['A', 'B', 'C', 'Z']
+<<<<<<< HEAD
 series = ['D', 'E', 'F', 'G']
+=======
+series = ['D', 'E']
+series = ['F', 'G']
+>>>>>>> b38b84aa084ac6ebca6fc50e31c78a9dc72749a6
 Parallel(n_jobs = 4, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
         
+

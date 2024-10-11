@@ -90,7 +90,12 @@ def series_function(series, n_jobs = 8):
     folders = os.listdir(series_path)
     samples = []
     for sample in folders:
-        if not sample == 'D_3': continue
+        if sample[0] == 'D':
+            if not sample == 'D_5': continue
+        if sample[0] == 'F':
+            if sample == 'F_1': continue
+        if sample[0] == 'G':
+            if not sample == 'G_5': continue
         samples.append(sample.split('_')[-1])
 
     Parallel(n_jobs = n_jobs, temp_folder=temppath)(delayed(sample_function)(series, sample) for sample in samples)
