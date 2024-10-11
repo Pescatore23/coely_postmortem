@@ -90,7 +90,7 @@ def cut_through_membrane_center(im, ser):
     CL = search_crude_CL(im)
     IFcoords = find_center_surface(CL, ser)
     interface = extract_center_face(im, IFcoords)
-    return interface
+    return interface, IFcoords
 
 # def cut_through_membrane_center(im):
 #     CL = search_crude_CL(im)
@@ -102,8 +102,11 @@ def cut_through_membrane_center(im, ser):
 def sample_function(series, sample):
     sample_path = os.path.join(toppath, series+'_series', series+'_'+sample)
     outpath = os.path.join(toppath, 'membrane_cut')
+    outpath2 = os.path.join(toppath, 'membrane_cut_positions')
     if not os.path.exists(outpath):
         os.mkdir(outpath)
+    if not os.path.exists(outpath2):
+        os.mkdir(outpath2)
     
     files = os.listdir(sample_path)
     stages = []
@@ -118,8 +121,9 @@ def sample_function(series, sample):
         impath = os.path.join(sample_path, imroot+'rotcrop.tif')
         im = skimage.io.imread(impath)
         im = im[100:1100,50:550,:]
-        im = cut_through_membrane_center(im, series)
+        im, impos = cut_through_membrane_center(im, series)
         skimage.io.imsave(os.path.join(outpath, imroot+'_membrane_cut.tif'), im)
+        skimage.io.imsave(os.path.join(outpath2, imroot+'_membrane_cut_position.tif'), impos)
         
         
 def series_function(series, n_jobs = 8):
@@ -134,13 +138,8 @@ def series_function(series, n_jobs = 8):
     
     
     
-series = ['A', 'B', 'C', 'Z']
-<<<<<<< HEAD
-series = ['D', 'E', 'F', 'G']
-=======
-series = ['D', 'E']
-series = ['F', 'G']
->>>>>>> b38b84aa084ac6ebca6fc50e31c78a9dc72749a6
+
+series = ['A', 'B', 'C','D', 'E', 'F', 'G', 'Z']
 Parallel(n_jobs = 4, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
         
