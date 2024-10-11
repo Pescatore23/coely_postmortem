@@ -172,7 +172,8 @@ def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_
             path = os.path.join(sample_path , series+'_'+sample+'_postop_2b', series+'_'+sample+'_postop_2b_.vol')
         if series+'_'+sample == 'C_4' and stage == 'preop':
             path = os.path.join(sample_path , series+'_'+sample+'_preopb', series+'_'+sample+'_preopb_.vol')
-            
+        if series+'_'+sample == 'F_5' and stage == 'postop_1':
+            path = os.path.join(sample_path, series+'_postop_1', series+'_postop_1_.vol')
         im = get_stage_im(path, series, sample, stage)
         ims.append(im)
         
@@ -208,17 +209,17 @@ def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_
         outputpath = os.path.join(sample_path, series+'_'+sample+'_'+stages[3]+'_registered.tif')
         skimage.io.imsave(outputpath, np.transpose(postop2im,(2,1,0)))
         
-print('D4')
-sample_function('D', '4')
+#print('D4')
+#sample_function('D', '4')
 
-print('D5')
-sample_function('D', '5')
+#print('D5')
+#sample_function('D', '5')
 
-print('F3')
-sample_function('F', '3')
+#print('F3')
+#sample_function('F', '3')
 
-print('F4')
-sample_function('F', '4')
+#print('F4')
+#sample_function('F', '4')
 
 print('F5')
 sample_function('F', '5')
