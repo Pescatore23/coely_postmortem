@@ -174,6 +174,8 @@ def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_
             path = os.path.join(sample_path , series+'_'+sample+'_preopb', series+'_'+sample+'_preopb_.vol')
         if series+'_'+sample == 'F_5' and stage == 'postop_1':
             path = os.path.join(sample_path, series+'_postop_1', series+'_postop_1_.vol')
+        if series+'_'+sample == 'C_5' and stage == 'postop_1':
+            path = os.path.join(sample_path, series+'_postop', series+'_postop_.vol')
         im = get_stage_im(path, series, sample, stage)
         ims.append(im)
         
