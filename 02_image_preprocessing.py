@@ -62,7 +62,8 @@ def sample_function(series, sample):
             
     for stage in stages:
         imroot = series+'_'+sample+'_'+stage
-        impath = os.path.join(sample_path, imroot+'rotcrop.tif')
+        # impath = os.path.join(sample_path, imroot+'rotcrop.tif')
+        impath = os.path.join(sample_path, imroot+'registered.tif')
         outpathCL = os.path.join(sample_path, 'CL_extraction')
         if not os.path.exists(outpathCL):
             os.mkdir(outpathCL)
@@ -90,12 +91,12 @@ def series_function(series, n_jobs = 8):
     folders = os.listdir(series_path)
     samples = []
     for sample in folders:
-        if sample[0] == 'D':
-            if not sample == 'D_5': continue
-        if sample[0] == 'F':
-            if sample == 'F_1': continue
-        if sample[0] == 'G':
-            if not sample == 'G_5': continue
+        # if sample[0] == 'D':
+        #     if not sample == 'D_5': continue
+        # if sample[0] == 'F':
+        #     if sample == 'F_1': continue
+        # if sample[0] == 'G':
+        #     if not sample == 'G_5': continue
         samples.append(sample.split('_')[-1])
 
     Parallel(n_jobs = n_jobs, temp_folder=temppath)(delayed(sample_function)(series, sample) for sample in samples)
@@ -104,7 +105,7 @@ def series_function(series, n_jobs = 8):
 series = ['A', 'B', 'C', 'Z']
 # series = ['C', 'Z']
 series = ['D', 'E']
-series = ['D', 'E', 'F', 'G']
+series = ['C', 'D', 'E', 'F', 'G']
 Parallel(n_jobs = 4, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
     
