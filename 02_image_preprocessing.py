@@ -14,13 +14,13 @@ from scipy import ndimage #scipy version 1.12.0
 toppath = '/mpc/homes/fische_r/nanotom_data/2023_COELY_postmortem'
 temppath = '/mnt/SSD/fische_r/tmp'
 
-def crop_cathode_CL(im):
+def crop_cathode_CL(im, cropfix):
     area = np.argmax(im>0.3, axis=2)
     med = np.median(area).astype(int)
     for x in range(im.shape[0]):
         for y in range(im.shape[1]):
             crop = area[x,y]
-            if np.abs(crop-med)>10: #30 for D and E series, was 10 before
+            if np.abs(crop-med)>cropfix: #30 for D and E series, was 10 before
                 crop = med
             crop = crop+10
             im[x,y,:crop] = 0
@@ -33,10 +33,12 @@ def unsharp_mask_as_IJ(im, sigma, weight):
     im = (im - weight*blur)/(1-weight)
     return im
 
-def crop_and_normalize(impath,CLpath, crop=True):
+def crop_and_normalize(impath,CLpath, ser, crop=True):
     im = skimage.io.imread(impath)
     im = im[100:1100,50:550,:] #crop to active area
-    if crop: im = crop_cathode_CL(im)
+    cropfix = 30
+    if ser == 'C': cropfix = 10
+    if crop: im = crop_cathode_CL(im, cropfix)
     im = unsharp_mask_as_IJ(im, 1, 0.6)
     
     #normalize image to similar grayvalues for all samples
@@ -76,9 +78,9 @@ def sample_function(series, sample):
         
         if option:
             impath = os.path.join(sample_path, imroot+'rotcrop_CCL_manually_removed.tif')
-            im = crop_and_normalize(impath, CLpath, crop=False)
+            im = crop_and_normalize(impath, CLpath, series, crop=False)
         else:
-            im = crop_and_normalize(impath, CLpath)
+            im = crop_and_normalize(impath, CLpath, series)
         
         outpath = os.path.join(toppath, series+'_normalized')
         if not os.path.exists(outpath):
