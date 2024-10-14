@@ -221,11 +221,11 @@ def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_
 #print('F4')
 #sample_function('F', '4')
 
-print('F5')
-sample_function('F', '5')
+# print('F5')
+# sample_function('F', '5')
 
-print('G5')
-sample_function('G', '5')
+print('C5')
+sample_function('C', '5',stages = ['preop', 'postop_1'])
 
 
 
