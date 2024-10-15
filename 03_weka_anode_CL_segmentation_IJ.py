@@ -15,33 +15,37 @@ toppath = '/mnt/nas_nanotomData/CT_Data_PSI/FR54/2023_COELY_postmortem'
 # outpath = os.path.join(toppath, 'ABCZ_CL_segmented')
 
 wekapath = os.path.join(toppath, 'Weka_segmentation_CL_series_G')
-datapath = os.path.join(toppath, 'DE_normalized')
-outpath = os.path.join(toppath, 'DE_CL_segmented')
 
-if not os.path.exists(outpath):
-	os.makedirs(outpath)
+series = ['C', 'D', 'E', 'F', 'G']
 
-files = os.listdir(datapath)
-
-for f in files:
-	#load file
-	splitfile = f.split('_')
-	fileroot = ''.join([i+'_' for i in splitfile[:-1]])
-	fileroot = fileroot[:-1]
-	# if not fileroot[:3] == 'D_3': continue
-	print(fileroot)
-	im = IJ.openImage(os.path.join(datapath,f))
+for ser in series:
+	datapath = os.path.join(toppath, ser+'_normalized')
+	outpath = os.path.join(toppath, ser+'_CL_segmented')
 	
-	#segment
-	segmentator = trainableSegmentation.WekaSegmentation(im)
-	segmentator.loadClassifier(os.path.join(wekapath, 'classifier_G3_preop.model'))
-	segmentator.applyClassifier( 0 )
-	result = segmentator.getClassifiedImage()
+	if not os.path.exists(outpath):
+		os.makedirs(outpath)
 	
-	#save to file
-	targetpath = os.path.join(outpath, fileroot+'_ACL_segmented.tif')
-	FileSaver(result).saveAsTiff(targetpath)
-	IJ.run("Close All")
+	files = os.listdir(datapath)
+	
+	for f in files:
+		#load file
+		splitfile = f.split('_')
+		fileroot = ''.join([i+'_' for i in splitfile[:-1]])
+		fileroot = fileroot[:-1]
+		# if not fileroot[:3] == 'D_3': continue
+		print(fileroot)
+		im = IJ.openImage(os.path.join(datapath,f))
+		
+		#segment
+		segmentator = trainableSegmentation.WekaSegmentation(im)
+		segmentator.loadClassifier(os.path.join(wekapath, 'classifier_G3_preop_postop2.model'))
+		segmentator.applyClassifier( 0 )
+		result = segmentator.getClassifiedImage()
+		
+		#save to file
+		targetpath = os.path.join(outpath, fileroot+'_ACL_segmented.tif')
+		FileSaver(result).saveAsTiff(targetpath)
+		IJ.run("Close All")
 	
 	
 
