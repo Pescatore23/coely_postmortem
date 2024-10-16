@@ -17,12 +17,12 @@ from joblib import Parallel, delayed
 
 temppath = '/mnt/SSD/fische_r/tmp'
 toppath = '/mnt/nas_nanotomData/CT_Data_PSI/FR54/2023_COELY_postmortem'
-outpath = os.path.join(toppath, 'ACL_projections')
+outpath = os.path.join(toppath, 'ACL_projections_mean')
 if not os.path.exists(outpath):
     os.mkdir(outpath)
 
 
-def find_free_GPU_memory(gpu_id, limit=0.5, num_GPU = 5):
+def find_free_GPU_memory(gpu_id, limit=0.75, num_GPU = 5):
     free = cp.cuda.Device(gpu_id).mem_info[0]/cp.cuda.Device(gpu_id).mem_info[1]
     
     while free<limit:
@@ -77,7 +77,7 @@ def project_CL(im, imseg, gpu_id):
     im_trace = pad_and_close3D(imseg, gpu_id)
     im = im.astype(float)
     im[~im_trace] = np.nan
-    proj = np.nanmax(im, axis=1)
+    proj = np.nanmean(im, axis=1)
     return proj
 
 def extract_samples(series):
@@ -114,7 +114,7 @@ def sample_function(sample_name, i):
 series = ['A','B','C','D','E','F']
 samples = extract_samples(series)
 
-Parallel(n_jobs = 16, temp_folder=temppath)(delayed(sample_function)(samples[i], i) for i in range(len(samples)))
+Parallel(n_jobs = 32, temp_folder=temppath)(delayed(sample_function)(samples[i], i) for i in range(len(samples)))
 
 #create sample list
 
