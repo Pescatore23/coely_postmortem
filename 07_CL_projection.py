@@ -17,7 +17,7 @@ from joblib import Parallel, delayed
 
 temppath = '/mnt/SSD/fische_r/tmp'
 toppath = '/mnt/nas_nanotomData/CT_Data_PSI/FR54/2023_COELY_postmortem'
-outpath = os.apth.join(toppath, 'ACL_projections')
+outpath = os.path.join(toppath, 'ACL_projections')
 if not os.path.exists(outpath):
     os.mkdir(outpath)
 
@@ -59,7 +59,7 @@ def pad_and_close3D(im, gpu_id, radius=37):
 
 def load_grayvalue(ser, sample, stage):
     proc = '_registered.tif'
-    if ser in ['A','B']:
+    if ser in ['A','B', 'Z']:
         proc = '_rotcrop.tif'
     impath = os.path.join(toppath, ser+'_series',ser+'_'+sample,ser+'_'+sample+'_'+stage+proc)
     im = np.transpose(skimage.io.imread(impath)[100:1100,50:550,:], (1,2,0))  #do the transpose and cropping to match like the weka segmented image in jupyter to not mess up things
@@ -88,8 +88,9 @@ def extract_samples(series):
             sertop = 'ABCZ'
         serlist = os.listdir(os.path.join(toppath, sertop+'_CL_segmented'))
         for filename in serlist:
-            sample_name = filename.split('__')[0]
-            samples.append(sample_name)
+            if filename[0] in series:
+	            sample_name = filename.split('__')[0]
+        	    samples.append(sample_name)
     return samples
 
 def sample_function(sample_name, i):
