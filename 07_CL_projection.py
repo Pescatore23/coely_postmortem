@@ -127,7 +127,9 @@ samples = extract_samples(series)
 results = Parallel(n_jobs = 32, temp_folder=temppath)(delayed(sample_function)(samples[i], i) for i in range(len(samples)))
 
 #create sample list
-# results = np.stack(results)
+results = np.stack(results)
+
+np.save(os.path.join(toppath, 'G_5_volume_hist_to_manually_insert_into_nc.npy'), results)
 
 # data = xr.dataset({'volume_hist': (['sample', 'bin'], results)},
 #                   coords = {'sample': samples,
