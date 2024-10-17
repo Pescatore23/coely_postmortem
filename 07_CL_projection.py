@@ -23,7 +23,7 @@ if not os.path.exists(outpath):
     os.mkdir(outpath)
 
 
-bins=np.arange(0,1.4,0.025)
+bins=np.arange(0,1.8,0.025)
 
 def find_free_GPU_memory(gpu_id, limit=0.75, num_GPU = 5):
     free = cp.cuda.Device(gpu_id).mem_info[0]/cp.cuda.Device(gpu_id).mem_info[1]
