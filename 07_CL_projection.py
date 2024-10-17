@@ -96,8 +96,9 @@ def extract_samples(series):
         serlist = os.listdir(os.path.join(toppath, sertop+'_CL_segmented'))
         for filename in serlist:
             if filename[0] in series:
-	            sample_name = filename.split('__')[0]
-        	    samples.append(sample_name)
+                sample_name = filename.split('__')[0]
+            if sample_name[:3] == 'G_5': 
+                samples.append(sample_name)
     return samples
 
 def sample_function(sample_name, i):
@@ -114,25 +115,26 @@ def sample_function(sample_name, i):
     gpu_id = find_free_GPU_memory(i%5)
     proj, hist = project_CL(im, imseg, gpu_id)
     
-    # path = os.path.join(outpath, ser+'_'+sample+'_'+stage+'_ACL_projection.tif')
-    # skimage.io.imsave(path, proj)
+    path = os.path.join(outpath, ser+'_'+sample+'_'+stage+'_ACL_projection.tif')
+    skimage.io.imsave(path, proj)
     return hist
 
 
 series = ['A','B','C','D','E','F', 'G']
+series = ['5']
 samples = extract_samples(series)
 
 results = Parallel(n_jobs = 32, temp_folder=temppath)(delayed(sample_function)(samples[i], i) for i in range(len(samples)))
 
 #create sample list
-results = np.stack(results)
+# results = np.stack(results)
 
-data = xr.dataset({'volume_hist': (['sample', 'bin'], results)},
-                  coords = {'sample': samples,
-                            'bin': bins}
-    )
+# data = xr.dataset({'volume_hist': (['sample', 'bin'], results)},
+#                   coords = {'sample': samples,
+#                             'bin': bins}
+#     )
 
-data.to_netcdf(os.path.join(toppath, 'CL_grayvalue_histograms.nc'))
+# data.to_netcdf(os.path.join(toppath, 'CL_grayvalue_histograms.nc'))
 
 
 
