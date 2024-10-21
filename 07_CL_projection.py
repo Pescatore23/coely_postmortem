@@ -18,7 +18,8 @@ import xarray as xr
 
 temppath = '/mnt/SSD/fische_r/tmp'
 toppath = '/mnt/nas_nanotomData/CT_Data_PSI/FR54/2023_COELY_postmortem'
-outpath = os.path.join(toppath, 'ACL_projections_mean')
+outpath2 = os.path.join(toppath, 'ACL_projections_mean')
+outpath = os.path.join(toppath, 'ACL_projections')
 if not os.path.exists(outpath):
     os.mkdir(outpath)
 
@@ -83,9 +84,10 @@ def project_CL(im, imseg, gpu_id):
     im_trace = pad_and_close3D(imseg, gpu_id)
     im = im.astype(float)
     im[~im_trace] = np.nan
-    proj = np.nanmean(im, axis=1)
+    proj = np.nanmax(im, axis=1)
+    projmean = np.nanmean(im, axis=1)
     hist = CL_hist(im)
-    return proj, hist
+    return proj, projmean, hist
 
 def extract_samples(series):
     samples = []
@@ -113,8 +115,10 @@ def sample_function(sample_name, i):
     imseg = load_segmented(ser, sample, stage)
     
     gpu_id = find_free_GPU_memory(i%5)
-    proj, hist = project_CL(im, imseg, gpu_id)
+    proj, projmean,  hist = project_CL(im, imseg, gpu_id)
     
+    path2 = os.path.join(outpath2, ser+'_'+sample+'_'+stage+'_ACL_projection.tif')
+    skimage.io.imsave(path2, projmean)
     path = os.path.join(outpath, ser+'_'+sample+'_'+stage+'_ACL_projection.tif')
     skimage.io.imsave(path, proj)
     return hist
