@@ -97,7 +97,7 @@ def extract_samples(series):
         for filename in serlist:
             if filename[0] in series:
                 sample_name = filename.split('__')[0]
-            if sample_name[:3] == 'G_5': 
+           # if sample_name[:3] == 'G_5': 
                 samples.append(sample_name)
     return samples
 
@@ -121,7 +121,7 @@ def sample_function(sample_name, i):
 
 
 series = ['A','B','C','D','E','F', 'G']
-series = ['G']
+#series = ['G']
 samples = extract_samples(series)
 print(samples)
 results = Parallel(n_jobs = 32, temp_folder=temppath)(delayed(sample_function)(samples[i], i) for i in range(len(samples)))
@@ -129,19 +129,11 @@ results = Parallel(n_jobs = 32, temp_folder=temppath)(delayed(sample_function)(s
 #create sample list
 results = np.stack(results)
 
-np.save(os.path.join(toppath, 'G_5_volume_hist_to_manually_insert_into_nc.npy'), results)
+np.save(os.path.join(toppath, 'volume_hist_dump.npy'), results)
 
-# data = xr.dataset({'volume_hist': (['sample', 'bin'], results)},
-#                   coords = {'sample': samples,
-#                             'bin': bins}
-#     )
+data = xr.Dataset({'volume_hist': (['sample', 'bin'], results)},
+                   coords = {'sample': samples,
+				'bin': bins}
+     )
 
-# data.to_netcdf(os.path.join(toppath, 'CL_grayvalue_histograms.nc'))
-
-
-
- 
-    
-        
-        
-        
+data.to_netcdf(os.path.join(toppath, 'CL_grayvalue_histograms.nc'))
