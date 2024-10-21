@@ -97,9 +97,9 @@ def series_function(series, n_jobs = 8):
         #     if not sample == 'D_5': continue
         # if sample[0] == 'F':
         #     if sample == 'F_1': continue
-        if sample in ['E_1','E_2', 'F_2']: continue
-        # if sample[0] == 'G':
-        #     if not sample == 'G_5': continue
+        # if sample in ['E_1','E_2', 'F_2']: continue
+        # # if sample[0] == 'G':
+        if not sample == 'G_5': continue
         samples.append(sample.split('_')[-1])
 
     Parallel(n_jobs = n_jobs, temp_folder=temppath)(delayed(sample_function)(series, sample) for sample in samples)
@@ -109,6 +109,7 @@ series = ['A', 'B', 'C', 'Z']
 # series = ['C', 'Z']
 series = ['D', 'E']
 series = ['C', 'D', 'E', 'F', 'G']
+series = ['G']
 Parallel(n_jobs = 8, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
     
