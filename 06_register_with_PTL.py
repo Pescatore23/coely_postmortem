@@ -211,7 +211,7 @@ def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_
         skimage.io.imsave(outputpath, np.transpose(postop2im,(2,1,0)))
     if 'postop_3' in stages:
         outputpath = os.path.join(sample_path, series+'_'+sample+'_'+stages[3]+'_registered.tif')
-        skimage.io.imsave(outputpath, np.transpose(postop2im,(2,1,0)))
+        skimage.io.imsave(outputpath, np.transpose(postop3im,(2,1,0)))
         
 #print('D4')
 #sample_function('D', '4')
@@ -228,8 +228,8 @@ def sample_function(series, sample, toppath=toppath, stages = ['preop', 'postop_
 # print('F5')
 # sample_function('F', '5')
 
-print('G5')
-sample_function('G', '5')
+print('G4')
+sample_function('G', '4')
 
 
 
