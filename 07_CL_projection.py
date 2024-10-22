@@ -169,7 +169,7 @@ series = ['A','B','C','D','E','F', 'G']
 #series = ['G']
 samples = extract_samples(series)
 print(samples)
-results = Parallel(n_jobs = 32, temp_folder=temppath)(delayed(sample_function)(samples[i], i) for i in range(len(samples)))
+results = Parallel(n_jobs = 16, temp_folder=temppath)(delayed(sample_function)(samples[i], i) for i in range(len(samples)))
 
 #create sample list
 results = np.stack(results)
