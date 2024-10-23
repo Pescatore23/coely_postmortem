@@ -135,6 +135,7 @@ def project_CL(im, imseg, gpu_id):
 def extract_samples(series):
     samples = []
     for ser in series:
+        print(ser)
         sertop = ser
         if ser in ['A','B']:
             sertop = 'ABCZ'
@@ -143,6 +144,11 @@ def extract_samples(series):
             if filename[0] in series:
                 sample_name = filename.split('__')[0]
            # if sample_name[:3] == 'G_5': 
+                if ser in ['A','B']:
+                    if sample_name[0] == 'C': continue
+                    if ser == 'A' and sample_name[0] == 'B': continue
+                    if ser == 'B' and sample_name[0] == 'A': continue
+                print(sample_name)
                 samples.append(sample_name)
     return samples
 
@@ -166,7 +172,7 @@ def sample_function(sample_name, i):
 
 
 series = ['A','B','C','D','E','F', 'G']
-#series = ['G']
+# series = ['G']
 samples = extract_samples(series)
 print(samples)
 results = Parallel(n_jobs = 16, temp_folder=temppath)(delayed(sample_function)(samples[i], i) for i in range(len(samples)))
@@ -174,11 +180,11 @@ results = Parallel(n_jobs = 16, temp_folder=temppath)(delayed(sample_function)(s
 #create sample list
 results = np.stack(results)
 
-np.save(os.path.join(toppath, 'volume_hist_dump_v2.npy'), results)
+np.save(os.path.join(toppath, 'volume_hist_dump_v2_clean.npy'), results)
 
 data = xr.Dataset({'volume_hist': (['sample', 'bin'], results)},
                    coords = {'sample': samples,
-				'bin': bins}
+				'bin': bins[:-1]}
      )
 
-data.to_netcdf(os.path.join(toppath, 'CL_grayvalue_histograms_v2.nc'))
+data.to_netcdf(os.path.join(toppath, 'CL_grayvalue_histograms_v2_clean.nc'))
