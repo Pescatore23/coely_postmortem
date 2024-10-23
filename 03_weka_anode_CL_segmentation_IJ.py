@@ -16,7 +16,7 @@ toppath = '/mnt/nas_nanotomData/CT_Data_PSI/FR54/2023_COELY_postmortem'
 
 wekapath = os.path.join(toppath, 'Weka_segmentation_CL_series_G')
 
-series = ['G']
+series = ['C']
 
 for ser in series:
 	datapath = os.path.join(toppath, ser+'_normalized')
@@ -32,7 +32,7 @@ for ser in series:
 		splitfile = f.split('_')
 		fileroot = ''.join([i+'_' for i in splitfile[:-1]])
 		fileroot = fileroot[:-1]
-		if not fileroot[:3] == 'G_4': continue
+		if not fileroot[:3] == 'C_5': continue
 		print(fileroot)
 		im = IJ.openImage(os.path.join(datapath,f))
 		
