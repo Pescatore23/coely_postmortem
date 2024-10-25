@@ -40,18 +40,15 @@ def find_center_surface(CL, ser):
     # some hard coded limits and median filtering
     # TODO: consider that position for custom BPM is closer to cathode
     
-    CL0 = CL[:,:,0]
-    CL1 = CL[:,:,1]
+    CL0 = CL[:,:,0] #ACL ?!
+    CL1 = CL[:,:,1] #CCL ?!
 
     #global median filter
     medCL0 = np.median(CL0[CL0>0])
     CL0[CL0<5] = medCL0
 
     medCL1 = np.median(CL1)
-    if ser in 'ABCZ': 
-        CL1[CL1<medCL0+10] = medCL1
-    else:
-        CL1[CL1<medCL0-20] = medCL1
+    CL1[CL1<medCL0+10] = medCL1
 
     # #local median filter
     CL0 = sp.ndimage.median_filter(CL0, size = 4)
@@ -79,7 +76,7 @@ def find_center_surface(CL, ser):
     IFcoords = sp.ndimage.median_filter(IFcoords, size = 4)
 
     if ser not in 'ABCZ':
-        IFcoords = np.uint16(CL1-60)
+        IFcoords = np.uint16(CL0+60)
     
     return IFcoords
 
