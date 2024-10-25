@@ -59,12 +59,15 @@ def find_center_surface(CL, ser):
     diff[diff<10] = meddiff
     diff[diff>60]  = meddiff
     
-    if ser == 'D' or ser == 'E':
-        diff[diff<10] = meddiff
-        diff[diff>95]  = meddiff
-        IFcoords = np.uint16(CL0+30) #20 roughly the thickness of FAA in px, 30 checks if it can find the Nafiuon membrane
-    else:
-        IFcoords = np.uint16(CL1-diff)
+    # if ser == 'D' or ser == 'E':
+    #     diff[diff<10] = meddiff
+    #     diff[diff>95]  = meddiff
+    #     IFcoords = np.uint16(CL0+30) #20 roughly the thickness of FAA in px, 30 checks if it can find the Nafiuon membrane
+    # else:
+    #     IFcoords = np.uint16(CL1-diff)
+    
+    if ser not in 'ABCZ':
+        IFcoords = np.uint16(CL1-58) #58 is a little more than the ANfion thickness
 
     # IFcoords = np.uint16((CL1+CL0)/2)
     coordmed = np.median(IFcoords)
