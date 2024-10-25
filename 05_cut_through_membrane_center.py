@@ -51,7 +51,7 @@ def find_center_surface(CL, ser):
     if ser in 'ABCZ': 
         CL1[CL1<medCL0+10] = medCL1
     else:
-        CL1[np.abs(CL1-medCL1)>30] = medCL1
+        CL1[CL1<medCL0-20] = medCL1
 
     # #local median filter
     CL0 = sp.ndimage.median_filter(CL0, size = 4)
