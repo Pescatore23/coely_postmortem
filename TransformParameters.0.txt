@@ -1,4 +1,4 @@
-(CenterOfRotationPoint 649.5 349.5 82)
+(CenterOfRotationPoint 649.5 349.5 149.5)
 (ComputeZYX "false")
 (Direction 1 0 0 0 1 0 0 0 1)
 (FixedImageDimension 3)
@@ -10,10 +10,10 @@
 (MovingInternalImagePixelType "float")
 (NumberOfParameters 6)
 (Origin 0 0 0)
-(Size 1300 700 165)
+(Size 1300 700 300)
 (Spacing 1 1 1)
 (Transform "EulerTransform")
-(TransformParameters -0.004304090620254966 0.006427630767741156 0.0020151553060626685 9.304631986454604 -19.967977162075908 56.401900537306574)
+(TransformParameters -0.018000339406368724 0.006794024429498426 0.003160102890904827 4.5659877540082325 8.323797622015887 -18.86021046451)
 (UseDirectionCosines "true")
 
 // ResampleInterpolator specific

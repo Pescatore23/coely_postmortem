@@ -66,14 +66,17 @@ def find_center_surface(CL, ser):
     # else:
     #     IFcoords = np.uint16(CL1-diff)
     
-    if ser not in 'ABCZ':
-        IFcoords = np.uint16(CL1-58) #58 is a little more than the ANfion thickness
+ #   if ser not in 'ABCZ':
+#        IFcoords = np.uint16(CL1-62) #58 is a little more than the ANfion thickness
 
-    # IFcoords = np.uint16((CL1+CL0)/2)
+    IFcoords = np.uint16((CL1+CL0)/2)
     coordmed = np.median(IFcoords)
     IFcoords[IFcoords>80] = coordmed
     IFcoords[IFcoords<30] = coordmed
     IFcoords = sp.ndimage.median_filter(IFcoords, size = 4)
+
+    if ser not in 'ABCZ':
+        IFcoords = np.uint16(CL1-60)
     
     return IFcoords
 
@@ -143,7 +146,7 @@ def series_function(series, n_jobs = 8):
     
 
 series = ['A', 'B', 'C','D', 'E', 'F', 'G', 'Z']
-series = ['G']
+#series = ['G']
 Parallel(n_jobs = 4, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
         
