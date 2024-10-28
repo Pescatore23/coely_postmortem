@@ -44,14 +44,14 @@ def find_center_surface(CL, ser, sample):
     CL1 = CL[:,:,1] #ACL ?!
 
     #global median filter
-    medCL0 = np.median(CL0[CL0>0])
-    CL0[CL0<5] = medCL0
+    # medCL0 = np.median(CL0[CL0>0])
+    CL0[CL0<5] = 5
     
 
     medCL1 = np.median(CL1)
     # if ser in 'ABCZ':
-    CL1[CL1<medCL0+10] = medCL1
-    CL0[CL0>CL1] = CL1[CL0>CL1]-100
+    CL1[np.abs(CL1-medCL1)>30] = medCL1
+    CL0[np.abs(CL0-medCL1)<20] = 5
     
     # print(medCL0, medCL1)
 
@@ -75,9 +75,9 @@ def find_center_surface(CL, ser, sample):
 #        IFcoords = np.uint16(CL1-62) #58 is a little more than the ANfion thickness
 
     if ser not in 'ABCZ':
-        IFcoords = np.uint16(CL1-60)
-        mask = CL0[(CL0-IFcoords)<-30]
-        IFcoords[mask] = np.uint16(CL0[mask]+30)
+        IFcoords = np.uint16(CL1-65)
+        mask = mask = CL0+20>IFcoords
+        IFcoords[mask] = np.uint16(CL0[mask]+20)
         coordmed = np.median(IFcoords)
         IFcoords[IFcoords>200] = coordmed
         IFcoords[IFcoords<10] = coordmed
@@ -91,6 +91,7 @@ def find_center_surface(CL, ser, sample):
         IFcoords[IFcoords>80] = coordmed
         IFcoords[IFcoords<30] = coordmed
         IFcoords = sp.ndimage.median_filter(IFcoords, size = 4)
+
     
     return IFcoords
 
