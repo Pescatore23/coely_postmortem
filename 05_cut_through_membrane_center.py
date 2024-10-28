@@ -49,20 +49,20 @@ def find_center_surface(CL, ser, sample):
     
 
     medCL1 = np.median(CL1)
-    # if ser in 'ABCZ':
-    CL1[np.abs(CL1-medCL1)>30] = medCL1
+    if ser in 'ABCZ':
+        CL1[np.abs(CL1-medCL1)>30] = medCL1
     CL0[np.abs(CL0-medCL1)<20] = 5
     
     # print(medCL0, medCL1)
 
     # #local median filter
-    CL0 = sp.ndimage.median_filter(CL0, size = 4)
-    CL1 = sp.ndimage.median_filter(CL1, size = 4)
+    CL0 = sp.ndimage.median_filter(CL0, size = 7)
+    CL1 = sp.ndimage.median_filter(CL1, size = 7)
     
-    diff = (CL1-CL0)/2
-    meddiff = np.median(diff)
-    diff[diff<10] = meddiff
-    diff[diff>60]  = meddiff
+    # diff = (CL1-CL0)/2
+    # meddiff = np.median(diff)
+    # diff[diff<10] = meddiff
+    # diff[diff>60]  = meddiff
     
     # if ser == 'D' or ser == 'E':
     #     diff[diff<10] = meddiff
@@ -81,7 +81,7 @@ def find_center_surface(CL, ser, sample):
         coordmed = np.median(IFcoords)
         IFcoords[IFcoords>200] = coordmed
         IFcoords[IFcoords<10] = coordmed
-        IFcoords = sp.ndimage.median_filter(IFcoords, size = 4)
+        IFcoords = sp.ndimage.median_filter(IFcoords, size = 8)
 
         # print(ser, sample, medcoord)
         
@@ -168,7 +168,7 @@ def series_function(series, n_jobs = 8):
 
 series = ['A', 'B', 'C','D', 'E', 'F', 'G', 'Z']
 #series = ['G']
-Parallel(n_jobs = 32, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
+Parallel(n_jobs = 40, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
         
 
