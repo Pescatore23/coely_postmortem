@@ -32,7 +32,7 @@ def search_crude_CL(im):
             LP = len(peaks)
             if LP>0:
                 peaks = peaks[:2]
-                CL[x,y,-LP:] = peaks
+                CL[x,y,-LP:] = peaks #inverse order to put CCL first
     return CL    #, excess_peaks
 
 
@@ -40,8 +40,8 @@ def find_center_surface(CL, ser):
     # some hard coded limits and median filtering
     # TODO: consider that position for custom BPM is closer to cathode
     
-    CL0 = CL[:,:,0] #ACL ?!
-    CL1 = CL[:,:,1] #CCL ?!
+    CL0 = CL[:,:,0] #CCL ?!
+    CL1 = CL[:,:,1] #ACL ?!
 
     #global median filter
     medCL0 = np.median(CL0[CL0>0])
@@ -72,8 +72,9 @@ def find_center_surface(CL, ser):
 #        IFcoords = np.uint16(CL1-62) #58 is a little more than the ANfion thickness
 
     if ser not in 'ABCZ':
-        IFcoords = np.uint16(CL0-60)
-        IFcoords[IFcoords<CL1+30] = np.uint16(CL1+30)
+        IFcoords = np.uint16(CL1-60)
+        IFcoords[IFcoords<CL0+30] = np.uint16(CL0+30)
+        IFcoords = sp.ndimage.median_filter(IFcoords, size = 4)
         
     else:
         IFcoords = np.uint16((CL1+CL0)/2)
