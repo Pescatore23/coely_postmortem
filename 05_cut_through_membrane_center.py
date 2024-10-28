@@ -73,11 +73,11 @@ def find_center_surface(CL, ser, sample):
 
     if ser not in 'ABCZ':
         IFcoords = np.uint16(CL1-60)
-        mask = CL0[(CL0-IFcoords)<30]
+        mask = CL0[(CL0-IFcoords)<-30]
         IFcoords[mask] = np.uint16(CL0[mask]+30)
         coordmed = np.median(IFcoords)
-        IFcoords[IFcoords>80] = coordmed
-        IFcoords[IFcoords<30] = coordmed
+        IFcoords[IFcoords>200] = coordmed
+        IFcoords[IFcoords<10] = coordmed
         IFcoords = sp.ndimage.median_filter(IFcoords, size = 4)
 
         # print(ser, sample, medcoord)
