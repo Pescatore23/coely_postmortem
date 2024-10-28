@@ -49,7 +49,7 @@ def find_center_surface(CL, ser, sample):
     
 
     medCL1 = np.median(CL1)
-    if ser in 'ABCZ':
+    if not ser in 'ABCZ':
         CL1[np.abs(CL1-medCL1)>30] = medCL1
     CL0[np.abs(CL0-medCL1)<20] = 5
     
@@ -166,7 +166,7 @@ def series_function(series, n_jobs = 8):
     
     
 
-series = ['A', 'B', 'C','D', 'E', 'F', 'G', 'Z']
+series = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'Z']
 #series = ['G']
 Parallel(n_jobs = 40, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
