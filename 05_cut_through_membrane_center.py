@@ -77,6 +77,7 @@ def find_center_surface(CL, ser):
 
     if ser not in 'ABCZ':
         IFcoords = np.uint16(CL0+60)
+        IFcoords[IFcoords<CL1+30] = np.uint16(CL0+30)
     
     return IFcoords
 
@@ -106,30 +107,33 @@ def cut_through_membrane_center(im, ser):
 
 
 def sample_function(series, sample):
-    sample_path = os.path.join(toppath, series+'_series', series+'_'+sample)
-    outpath = os.path.join(toppath, 'membrane_cut')
-    outpath2 = os.path.join(toppath, 'membrane_cut_positions')
-    if not os.path.exists(outpath):
-        os.mkdir(outpath)
-    if not os.path.exists(outpath2):
-        os.mkdir(outpath2)
-    
-    files = os.listdir(sample_path)
-    stages = []
-    for file in files:
-        splitfile = file.split('_')
-        if splitfile[-1] == 'rotcrop.tif':
-            stage = ''.join([i+'_' for i in splitfile[2:-1]])
-            stages.append(stage)
-            
-    for stage in stages:
-        imroot = series+'_'+sample+'_'+stage
-        impath = os.path.join(sample_path, imroot+'rotcrop.tif')
-        im = skimage.io.imread(impath)
-        im = im[100:1100,50:550,:]
-        im, impos = cut_through_membrane_center(im, series)
-        skimage.io.imsave(os.path.join(outpath, imroot+'_membrane_cut.tif'), im)
-        skimage.io.imsave(os.path.join(outpath2, imroot+'_membrane_cut_position.tif'), impos)
+    try:
+        sample_path = os.path.join(toppath, series+'_series', series+'_'+sample)
+        outpath = os.path.join(toppath, 'membrane_cut')
+        outpath2 = os.path.join(toppath, 'membrane_cut_positions')
+        if not os.path.exists(outpath):
+            os.mkdir(outpath)
+        if not os.path.exists(outpath2):
+            os.mkdir(outpath2)
+        
+        files = os.listdir(sample_path)
+        stages = []
+        for file in files:
+            splitfile = file.split('_')
+            if splitfile[-1] == 'rotcrop.tif':
+                stage = ''.join([i+'_' for i in splitfile[2:-1]])
+                stages.append(stage)
+                
+        for stage in stages:
+            imroot = series+'_'+sample+'_'+stage
+            impath = os.path.join(sample_path, imroot+'rotcrop.tif')
+            im = skimage.io.imread(impath)
+            im = im[100:1100,50:550,:]
+            im, impos = cut_through_membrane_center(im, series)
+            skimage.io.imsave(os.path.join(outpath, imroot+'_membrane_cut.tif'), im)
+            skimage.io.imsave(os.path.join(outpath2, imroot+'_membrane_cut_position.tif'), impos)
+    except:
+        print(series+sample+'_failed')
         
         
 def series_function(series, n_jobs = 8):
