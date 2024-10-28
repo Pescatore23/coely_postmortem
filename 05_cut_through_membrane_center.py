@@ -71,7 +71,7 @@ def find_center_surface(CL, ser):
 
     if ser not in 'ABCZ':
         IFcoords = np.uint16(CL0+60)
-        IFcoords[IFcoords<CL1-30] = np.uint16(CL1-30)
+        IFcoords[IFcoords<CL1+30] = np.uint16(CL1+30)
         
     else:
         IFcoords = np.uint16((CL1+CL0)/2)
