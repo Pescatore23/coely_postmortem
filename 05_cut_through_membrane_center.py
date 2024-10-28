@@ -36,7 +36,7 @@ def search_crude_CL(im):
     return CL    #, excess_peaks
 
 
-def find_center_surface(CL, ser):
+def find_center_surface(CL, ser, sample):
     # some hard coded limits and median filtering
     # TODO: consider that position for custom BPM is closer to cathode
     
@@ -50,7 +50,7 @@ def find_center_surface(CL, ser):
     medCL1 = np.median(CL1)
     CL1[CL1<medCL0+10] = medCL1
     
-    print(medCL0, medCL1)
+    # print(medCL0, medCL1)
 
     # #local median filter
     CL0 = sp.ndimage.median_filter(CL0, size = 4)
@@ -75,6 +75,8 @@ def find_center_surface(CL, ser):
         IFcoords = np.uint16(CL1-60)
         IFcoords[IFcoords<CL0+30] = np.uint16(CL0+30)
         IFcoords = sp.ndimage.median_filter(IFcoords, size = 4)
+        medcoord = np.median(IFcoords)
+        print(ser, sample, medcoord)
         
     else:
         IFcoords = np.uint16((CL1+CL0)/2)
@@ -97,9 +99,9 @@ def extract_center_face(im, IFcoords):
 
     return interface
 
-def cut_through_membrane_center(im, ser):
+def cut_through_membrane_center(im, ser, sample):
     CL = search_crude_CL(im)
-    IFcoords = find_center_surface(CL, ser)
+    IFcoords = find_center_surface(CL, ser, sample)
     interface = extract_center_face(im, IFcoords)
     return interface, IFcoords
 
@@ -133,7 +135,7 @@ def sample_function(series, sample):
             impath = os.path.join(sample_path, imroot+'rotcrop.tif')
             im = skimage.io.imread(impath)
             im = im[100:1100,50:550,:]
-            im, impos = cut_through_membrane_center(im, series)
+            im, impos = cut_through_membrane_center(im, series, sample)
             skimage.io.imsave(os.path.join(outpath, imroot+'_membrane_cut.tif'), im)
             skimage.io.imsave(os.path.join(outpath2, imroot+'_membrane_cut_position.tif'), impos)
     except:
