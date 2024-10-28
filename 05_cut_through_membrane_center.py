@@ -168,7 +168,7 @@ def series_function(series, n_jobs = 8):
 
 series = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'Z']
 #series = ['G']
-Parallel(n_jobs = 40, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
+Parallel(n_jobs = 64, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
         
 
