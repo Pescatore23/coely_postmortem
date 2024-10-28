@@ -46,10 +46,12 @@ def find_center_surface(CL, ser, sample):
     #global median filter
     medCL0 = np.median(CL0[CL0>0])
     CL0[CL0<5] = medCL0
+    
 
     medCL1 = np.median(CL1)
-    if ser in 'ABCZ':
-        CL1[CL1<medCL0+10] = medCL1
+    # if ser in 'ABCZ':
+    CL1[CL1<medCL0+10] = medCL1
+    CL0[CL0>CL1] = CL1[CL0>CL1]-100
     
     # print(medCL0, medCL1)
 
@@ -137,7 +139,10 @@ def sample_function(series, sample):
                 
         for stage in stages:
             imroot = series+'_'+sample+'_'+stage
-            impath = os.path.join(sample_path, imroot+'rotcrop.tif')
+            if series in 'ABZ':
+                impath = os.path.join(sample_path, imroot+'rotcrop.tif')
+            else:
+                impath = os.path.join(sample_path, imroot+'registered.tif')
             im = skimage.io.imread(impath)
             im = im[100:1100,50:550,:]
             im, impos = cut_through_membrane_center(im, series, sample)
@@ -162,7 +167,7 @@ def series_function(series, n_jobs = 8):
 
 series = ['A', 'B', 'C','D', 'E', 'F', 'G', 'Z']
 #series = ['G']
-Parallel(n_jobs = 16, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
+Parallel(n_jobs = 32, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
         
 
