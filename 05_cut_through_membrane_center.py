@@ -69,15 +69,16 @@ def find_center_surface(CL, ser):
  #   if ser not in 'ABCZ':
 #        IFcoords = np.uint16(CL1-62) #58 is a little more than the ANfion thickness
 
-    IFcoords = np.uint16((CL1+CL0)/2)
-    coordmed = np.median(IFcoords)
-    IFcoords[IFcoords>80] = coordmed
-    IFcoords[IFcoords<30] = coordmed
-    IFcoords = sp.ndimage.median_filter(IFcoords, size = 4)
-
     if ser not in 'ABCZ':
         IFcoords = np.uint16(CL0+60)
-        IFcoords[IFcoords<CL1+30] = np.uint16(CL0+30)
+        IFcoords[IFcoords<CL1-30] = np.uint16(CL1-30)
+        
+    else:
+        IFcoords = np.uint16((CL1+CL0)/2)
+        coordmed = np.median(IFcoords)
+        IFcoords[IFcoords>80] = coordmed
+        IFcoords[IFcoords<30] = coordmed
+        IFcoords = sp.ndimage.median_filter(IFcoords, size = 4)
     
     return IFcoords
 
