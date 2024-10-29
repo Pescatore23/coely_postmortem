@@ -28,7 +28,7 @@ def search_crude_CL(im):
     for x in range(shp[0]):
         for y in range(shp[1]):
             prof = grad[x,y,:]
-            peaks, props = sp.signal.find_peaks(prof, height=6*med/8, distance=15, prominence=med/4) #gives peaks sorted by height (= ACL first)
+            peaks, props = sp.signal.find_peaks(prof, height=5.5*med/10, distance=15, prominence=med/4.5) #gives peaks sorted by height (= ACL first)
             LP = len(peaks)
             if LP>0:
                 peaks = peaks[:2]
@@ -190,7 +190,7 @@ def series_function(series, n_jobs = 8):
 
 series = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'Z']
 #series = ['G']
-Parallel(n_jobs = 64, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
+Parallel(n_jobs = 128, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
         
 
