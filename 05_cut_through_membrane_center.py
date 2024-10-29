@@ -36,13 +36,14 @@ def search_crude_CL(im):
     return CL    #, excess_peaks
 
 
-def find_center_surface(CL, ser, sample):
+def find_center_surface(CL, ser, sample, second_it = True):
     # some hard coded limits and median filtering
     # TODO: consider that position for custom BPM is closer to cathode
     
-    CL0 = CL[:,:,0] #CCL ?!
-    CL1 = CL[:,:,1] #ACL ?!
 
+    CL0 = CL[:,:,0].copy() #CCL ?!
+    CL1 = CL[:,:,1].copy() #ACL ?!
+    
     #global median filter
     medCL0 = np.median(CL0[CL0>0])
     masksmall = CL0<1
@@ -50,17 +51,16 @@ def find_center_surface(CL, ser, sample):
     CL0[masksmall] = np.random.randint(medCL0, size=np.count_nonzero(masksmall))
     CL0[CL0<5] = 5
     
-
+    
     medCL1 = np.median(CL1)
     CL1[CL1>150] = medCL1
     CL1[CL1<50] = medCL1
-    
-    if not ser in 'ABCZ':
-        CL1[np.abs(CL1-medCL1)>30] = medCL1
+    # if not ser in 'ABCZ':
+        # CL1[np.abs(CL1-medCL1)>30] = medCL1
     CL0[np.abs(CL0-medCL1)<25] = 5
     
     # print(medCL0, medCL1)
-
+    
     # #local median filter
     CL0 = sp.ndimage.median_filter(CL0, size = 10)
     CL1 = sp.ndimage.median_filter(CL1, size = 10)
@@ -70,33 +70,49 @@ def find_center_surface(CL, ser, sample):
     # diff[diff<10] = meddiff
     # diff[diff>60]  = meddiff
     
-    # if ser == 'D' or ser == 'E':
-    #     diff[diff<10] = meddiff
-    #     diff[diff>95]  = meddiff
-    #     IFcoords = np.uint16(CL0+30) #20 roughly the thickness of FAA in px, 30 checks if it can find the Nafiuon membrane
-    # else:
-    #     IFcoords = np.uint16(CL1-diff)
+    IFcoords = np.uint16((CL1+CL0)/2)
+    coordmed = np.median(IFcoords)
+    IFcoords[IFcoords>100] = coordmed
+    IFcoords[IFcoords<10] = coordmed
+    IFcoords = sp.ndimage.median_filter(IFcoords, size = 10)
     
- #   if ser not in 'ABCZ':
-#        IFcoords = np.uint16(CL1-62) #58 is a little more than the ANfion thickness
-
-    if ser not in 'ABCZ':
-        IFcoords = np.uint16(CL1-65)
-        mask = mask = CL0+20>IFcoords
-        IFcoords[mask] = np.uint16(CL0[mask]+20)
+    CL1[CL1<coordmed] = medCL1
+    
+    
+    # second iteration to filter out CLpos across IFcoords
+    if second_it:
+        #global median filter
+        medCL0 = np.median(CL0[CL0>0])
+        masksmall = CL0<1
+        np.random.seed(5) 
+        CL0[masksmall] = np.random.randint(medCL0, size=np.count_nonzero(masksmall))
+        CL0[CL0<5] = 5
+        
+        
+        medCL1 = np.median(CL1)
+        CL1[CL1>150] = medCL1
+        CL1[CL1<50] = medCL1
+        # if not ser in 'ABCZ':
+            # CL1[np.abs(CL1-medCL1)>30] = medCL1
+        CL0[np.abs(CL0-medCL1)<25] = 5
+        
+        # print(medCL0, medCL1)
+        
+        # #local median filter
+        CL0 = sp.ndimage.median_filter(CL0, size = 10)
+        CL1 = sp.ndimage.median_filter(CL1, size = 10)
+        
+        # diff = (CL1-CL0)/2
+        # meddiff = np.median(diff)
+        # diff[diff<10] = meddiff
+        # diff[diff>60]  = meddiff
+        
+        IFcoords = np.uint16((CL1+CL0)/2)
         coordmed = np.median(IFcoords)
-        IFcoords[IFcoords>200] = coordmed
+        IFcoords[IFcoords>100] = coordmed
         IFcoords[IFcoords<10] = coordmed
         IFcoords = sp.ndimage.median_filter(IFcoords, size = 10)
 
-        # print(ser, sample, medcoord)
-        
-    else:
-        IFcoords = np.uint16((CL1+CL0)/2)
-        coordmed = np.median(IFcoords)
-        IFcoords[IFcoords>80] = coordmed
-        IFcoords[IFcoords<30] = coordmed
-        IFcoords = sp.ndimage.median_filter(IFcoords, size = 10)
 
     
     return IFcoords
