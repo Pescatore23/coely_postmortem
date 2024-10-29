@@ -19,7 +19,7 @@ from joblib import Parallel, delayed #joblib version 1.3.2
 toppath = '/mpc/homes/fische_r/nanotom_data/2023_COELY_postmortem'
 temppath = '/mnt/SSD/fische_r/tmp'
 
-def search_crude_CL(im):
+def search_crude_CL(im, offset=0):
     med = np.median(im)
     shp = im.shape
     CL = np.zeros((shp[0],shp[1],2), dtype = int)
@@ -28,7 +28,8 @@ def search_crude_CL(im):
     for x in range(shp[0]):
         for y in range(shp[1]):
             prof = grad[x,y,:]
-            peaks, props = sp.signal.find_peaks(prof, height=5.5*med/10, distance=15, prominence=med/4.5) #gives peaks sorted by height (= ACL first)
+            peaks, props = sp.signal.find_peaks(prof[offset:], height=5.5*med/10, distance=12, prominence=med/4) #gives peaks sorted by height (= ACL first)
+            peaks = peaks + offset
             LP = len(peaks)
             if LP>0:
                 peaks = peaks[:2]
@@ -129,8 +130,11 @@ def extract_center_face(im, IFcoords):
 
     return interface
 
-def cut_through_membrane_center(im, ser, sample):
-    CL = search_crude_CL(im)
+def cut_through_membrane_center(im, ser, sample, stage):
+    if ser+'_'+sample == 'C_1' and stage == 'postop_2':
+        CL = search_crude_CL(im, offset=30)
+    else:
+        CL = search_crude_CL(im)
     IFcoords = find_center_surface(CL, ser, sample)
     interface = extract_center_face(im, IFcoords)
     return interface, IFcoords
