@@ -87,7 +87,7 @@ def find_center_surface(CL, ser, sample):
         coordmed = np.median(IFcoords)
         IFcoords[IFcoords>200] = coordmed
         IFcoords[IFcoords<10] = coordmed
-        IFcoords = sp.ndimage.median_filter(IFcoords, size = 12)
+        IFcoords = sp.ndimage.median_filter(IFcoords, size = 10)
 
         # print(ser, sample, medcoord)
         
@@ -96,7 +96,7 @@ def find_center_surface(CL, ser, sample):
         coordmed = np.median(IFcoords)
         IFcoords[IFcoords>80] = coordmed
         IFcoords[IFcoords<30] = coordmed
-        IFcoords = sp.ndimage.median_filter(IFcoords, size = 8)
+        IFcoords = sp.ndimage.median_filter(IFcoords, size = 10)
 
     
     return IFcoords
