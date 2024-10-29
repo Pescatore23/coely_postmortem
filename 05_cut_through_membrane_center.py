@@ -128,7 +128,9 @@ def extract_center_face(im, IFcoords):
     return interface
 
 def cut_through_membrane_center(im, ser, sample, stage):
-    if ser+'_'+sample == 'C_1' and stage == 'postop_2':
+    #print(sample, stage)
+    if ser + '_' + sample == 'C_1' and stage == 'postop_2_':
+     #   print('debug')
         CL = search_crude_CL(im, offset=30)
     else:
         CL = search_crude_CL(im)
@@ -169,7 +171,7 @@ def sample_function(series, sample):
                 impath = os.path.join(sample_path, imroot+'registered.tif')
             im = skimage.io.imread(impath)
             im = im[100:1100,50:550,:]
-            im, impos = cut_through_membrane_center(im, series, sample)
+            im, impos = cut_through_membrane_center(im, series, sample, stage)
             skimage.io.imsave(os.path.join(outpath, imroot+'_membrane_cut.tif'), im)
             skimage.io.imsave(os.path.join(outpath2, imroot+'_membrane_cut_position.tif'), impos)
     except:
@@ -181,6 +183,7 @@ def series_function(series, n_jobs = 8):
     folders = os.listdir(series_path)
     samples = []
     for sample in folders:
+        if not sample == 'C_1': continue
         samples.append(sample.split('_')[-1])
 
     Parallel(n_jobs = n_jobs, temp_folder=temppath)(delayed(sample_function)(series, sample) for sample in samples)
@@ -190,7 +193,7 @@ def series_function(series, n_jobs = 8):
     
 
 series = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'Z']
-#series = ['G']
+#series = ['C']
 Parallel(n_jobs = 128, temp_folder=temppath)(delayed(series_function)(ser) for ser in series)
         
         
