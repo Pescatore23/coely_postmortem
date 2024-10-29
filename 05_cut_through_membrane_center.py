@@ -49,6 +49,9 @@ def find_center_surface(CL, ser, sample):
     
 
     medCL1 = np.median(CL1)
+    CL1[CL1>150] = medCL1
+    CL1[CL1<50] = medCL1
+    
     if not ser in 'ABCZ':
         CL1[np.abs(CL1-medCL1)>30] = medCL1
     CL0[np.abs(CL0-medCL1)<20] = 5
@@ -56,8 +59,8 @@ def find_center_surface(CL, ser, sample):
     # print(medCL0, medCL1)
 
     # #local median filter
-    CL0 = sp.ndimage.median_filter(CL0, size = 7)
-    CL1 = sp.ndimage.median_filter(CL1, size = 7)
+    CL0 = sp.ndimage.median_filter(CL0, size = 8)
+    CL1 = sp.ndimage.median_filter(CL1, size = 8)
     
     # diff = (CL1-CL0)/2
     # meddiff = np.median(diff)
@@ -90,7 +93,7 @@ def find_center_surface(CL, ser, sample):
         coordmed = np.median(IFcoords)
         IFcoords[IFcoords>80] = coordmed
         IFcoords[IFcoords<30] = coordmed
-        IFcoords = sp.ndimage.median_filter(IFcoords, size = 4)
+        IFcoords = sp.ndimage.median_filter(IFcoords, size = 8)
 
     
     return IFcoords
