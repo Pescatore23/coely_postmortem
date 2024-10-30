@@ -73,11 +73,23 @@ def find_center_surface(CL, ser, sample, second_it = True):
     # diff[diff<10] = meddiff
     # diff[diff>60]  = meddiff
     
-    IFcoords = np.uint16((CL1+CL0)/2)
-    coordmed = np.median(IFcoords)
-    IFcoords[IFcoords>100] = coordmed
-    IFcoords[IFcoords<10] = coordmed
+    if ser not in 'ABCZ':
+         IFcoords = np.uint16(CL1-65)
+         mask = mask = CL0+20>IFcoords
+         IFcoords[mask] = np.uint16(CL0[mask]+20)
+         coordmed = np.median(IFcoords)
+         IFcoords[IFcoords>200] = coordmed
+         IFcoords[IFcoords<10] = coordmed
+             
+         # print(ser, sample, medcoord)
+         
+    else:
+         IFcoords = np.uint16((CL1+CL0)/2)
+         coordmed = np.median(IFcoords)
+         IFcoords[IFcoords>80] = coordmed
+         IFcoords[IFcoords<30] = coordmed
     IFcoords = sp.ndimage.median_filter(IFcoords, size = 10)
+
     
     CL1[CL1<coordmed] = medCL1
     
@@ -105,10 +117,22 @@ def find_center_surface(CL, ser, sample, second_it = True):
         # diff[diff<10] = meddiff
         # diff[diff>60]  = meddiff
         
-        IFcoords = np.uint16((CL1+CL0)/2)
-        coordmed = np.median(IFcoords)
-        IFcoords[IFcoords>100] = coordmed
-        IFcoords[IFcoords<10] = coordmed
+        if ser not in 'ABCZ':
+             IFcoords = np.uint16(CL1-65)
+             mask = mask = CL0+20>IFcoords
+             IFcoords[mask] = np.uint16(CL0[mask]+20)
+             coordmed = np.median(IFcoords)
+             IFcoords[IFcoords>200] = coordmed
+             IFcoords[IFcoords<10] = coordmed
+    
+         
+             # print(ser, sample, medcoord)
+             
+        else:
+             IFcoords = np.uint16((CL1+CL0)/2)
+             coordmed = np.median(IFcoords)
+             IFcoords[IFcoords>80] = coordmed
+             IFcoords[IFcoords<30] = coordmed
         IFcoords = sp.ndimage.median_filter(IFcoords, size = 10)
 
 
