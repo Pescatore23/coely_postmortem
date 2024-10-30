@@ -74,7 +74,7 @@ def find_center_surface(CL, ser, sample, second_it = True):
     # diff[diff>60]  = meddiff
     
     if ser not in 'ABCZ':
-         IFcoords = np.uint16(CL1-65)
+         IFcoords = np.uint16(CL1-60)
          mask = mask = CL0+20>IFcoords
          IFcoords[mask] = np.uint16(CL0[mask]+20)
          coordmed = np.median(IFcoords)
@@ -118,7 +118,7 @@ def find_center_surface(CL, ser, sample, second_it = True):
         # diff[diff>60]  = meddiff
         
         if ser not in 'ABCZ':
-             IFcoords = np.uint16(CL1-65)
+             IFcoords = np.uint16(CL1-60)
              mask = mask = CL0+20>IFcoords
              IFcoords[mask] = np.uint16(CL0[mask]+20)
              coordmed = np.median(IFcoords)
