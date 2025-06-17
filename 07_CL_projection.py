@@ -99,7 +99,7 @@ def CL_trace(im):
 
 def load_grayvalue(ser, sample, stage):
     proc = '_registered.tif'
-    if ser in ['A','B', 'Z']:
+    if ser in ['A','B']:
         proc = '_rotcrop.tif'
     impath = os.path.join(toppath, ser+'_series',ser+'_'+sample,ser+'_'+sample+'_'+stage+proc)
     im = np.transpose(skimage.io.imread(impath)[100:1100,50:550,:], (1,2,0))  #do the transpose and cropping to match like the weka segmented image in jupyter to not mess up things
@@ -148,7 +148,7 @@ def extract_samples(series):
                     if sample_name[0] == 'C': continue
                     if ser == 'A' and sample_name[0] == 'B': continue
                     if ser == 'B' and sample_name[0] == 'A': continue
-                if not sample_name[:3] in ['Z_3']: continue 
+                if not sample_name[:3] in ['D_1', 'G_5']: continue 
                 print(sample_name)
                 samples.append(sample_name)
     return samples
@@ -173,7 +173,7 @@ def sample_function(sample_name, i):
 
 
 series = ['A','B','C','D','E','F', 'G']
-series = ['Z']
+series = ['D', 'G']
 samples = extract_samples(series)
 print(samples)
 results = Parallel(n_jobs = 16, temp_folder=temppath)(delayed(sample_function)(samples[i], i) for i in range(len(samples)))
@@ -181,11 +181,11 @@ results = Parallel(n_jobs = 16, temp_folder=temppath)(delayed(sample_function)(s
 #create sample list
 results = np.stack(results)
 
-np.save(os.path.join(toppath, 'volume_hist_dump_v2_clean_repeat_Z3.npy'), results)
+np.save(os.path.join(toppath, 'volume_hist_dump_v2_clean_repeat_D1_G5.npy'), results)
 
 data = xr.Dataset({'volume_hist': (['sample', 'bin'], results)},
                    coords = {'sample': samples,
 				'bin': bins[:-1]}
      )
 
-data.to_netcdf(os.path.join(toppath, 'CL_grayvalue_histograms_v2_clean_repeat_Z3.nc'))
+data.to_netcdf(os.path.join(toppath, 'CL_grayvalue_histograms_v2_clean_repeat_D1_G5.nc'))
