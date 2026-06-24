@@ -1,4 +1,4 @@
-This repository was used to process the data in thhis publication, please consider a citation if you like it:
+This repository was used to process the data in this publication, please consider a citation if you like it:
 
 ```latex
 @Article{Fischer2025,
